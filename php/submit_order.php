@@ -1,0 +1,3 @@
+<?php
+// Submit order script
+?>

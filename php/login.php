@@ -1,0 +1,3 @@
+<?php
+// User login script
+?>

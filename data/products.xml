@@ -1,0 +1,11 @@
+<!-- Products XML Data -->
+<products>
+    <!-- Example product -->
+    <product>
+        <id>1</id>
+        <name>Sample T-Shirt</name>
+        <price>19.99</price>
+        <image>images/sample-tshirt.jpg</image>
+        <description>Comfortable cotton t-shirt.</description>
+    </product>
+</products>
