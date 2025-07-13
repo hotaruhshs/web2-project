@@ -1,5 +1,14 @@
 /* Main stylesheet for UrbanThreadz Project - Bootstrap Enhanced */
 
+/* 
+=== COLOR PALETTE ===
+Sweet Brown: #B0323A (Primary red/burgundy for buttons, links, accents)
+Dutch White: #F9F3EF (Light cream/beige for backgrounds, cards)
+Mustard Brown: #C67C0C (Orange/gold for newsletter, offers)
+Gunmetal: #2B3537 (Dark gray for headers, text)
+Cadet Grey: #8AA8AB (Medium blue-gray for gradients, complements)
+*/
+
 /* Font hierarchy */
 body {
     font-family: 'Montserrat', sans-serif;
@@ -7,7 +16,7 @@ body {
 
 /* Custom brand colors and overrides */
 .hero-section {
-    background: linear-gradient(90deg, #e3f2fd 0%, #fff 100%) !important;
+    background: linear-gradient(90deg, #F9F3EF 0%, #8AA8AB 100%) !important;
 }
 
 /* Bebas Neue font for headings and brand elements */
@@ -35,12 +44,18 @@ h1, h2, .display-5 {
 }
 
 .nav-link:hover {
-    color: #0077cc !important;
+    color: #B0323A !important;
+}
+
+/* Active navigation state */
+.nav-link.active {
+    color: #B0323A !important;
+    font-weight: 600;
 }
 
 /* Signup button styling */
 .signup-btn {
-    background-color: #0077cc !important;
+    background-color: #B0323A !important;
     border: none;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
@@ -51,9 +66,9 @@ h1, h2, .display-5 {
 }
 
 .signup-btn:hover {
-    background-color: #005fa3 !important;
+    background-color: #2B3537 !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 119, 204, 0.3);
+    box-shadow: 0 4px 12px rgba(176, 50, 58, 0.3);
 }
 
 /* Cart icon styling */
@@ -68,12 +83,58 @@ h1, h2, .display-5 {
 
 .cart-icon:hover i {
     transform: scale(1.1);
-    color: #0077cc !important;
+    color: #B0323A !important;
 }
 
 /* Custom utility classes */
 .text-primary {
-    color: #0077cc !important;
+    color: #B0323A !important;
+}
+
+/* Primary button overrides */
+.btn-primary {
+    background-color: #B0323A !important;
+    border-color: #B0323A !important;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2B3537 !important;
+    border-color: #2B3537 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(176, 50, 58, 0.3);
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #2B3537 !important;
+    border-color: #2B3537 !important;
+    box-shadow: 0 0 0 0.2rem rgba(176, 50, 58, 0.25) !important;
+}
+
+/* Outline primary button overrides */
+.btn-outline-primary {
+    color: #B0323A !important;
+    border-color: #B0323A !important;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #B0323A !important;
+    border-color: #B0323A !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(176, 50, 58, 0.3);
+}
+
+/* Header styling */
+header {
+    background: linear-gradient(135deg, #2B3537 0%, #8AA8AB 100%) !important;
+    color: white !important;
+}
+
+header h1 {
+    color: white !important;
 }
 
 /* Category cards styling */
@@ -81,7 +142,7 @@ h1, h2, .display-5 {
     padding: 30px 20px;
     border-radius: 15px;
     transition: all 0.3s ease;
-    background: #fff;
+    background: #F9F3EF;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
@@ -101,7 +162,7 @@ h1, h2, .display-5 {
 
 /* Testimonial cards styling */
 .testimonial-card {
-    background: #fff;
+    background: #F9F3EF;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
@@ -114,7 +175,7 @@ h1, h2, .display-5 {
 
 /* Newsletter section styling */
 .newsletter-section {
-    background: linear-gradient(135deg, #0077cc 0%, #005fa3 100%) !important;
+    background: linear-gradient(135deg, #C67C0C 0%, #B0323A 100%) !important;
 }
 
 .newsletter-section .input-group .form-control {
@@ -146,18 +207,18 @@ h1, h2, .display-5 {
 }
 
 .social-links a:hover {
-    color: #0077cc !important;
+    color: #B0323A !important;
     transform: translateY(-2px);
 }
 
 /* Offers banner styling */
 .offers-banner {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+    background: linear-gradient(135deg, #C67C0C 0%, #B0323A 100%) !important;
 }
 
 /* Enhanced footer styling */
 footer {
-    background: linear-gradient(135deg, #212529 0%, #343a40 100%) !important;
+    background: linear-gradient(135deg, #2B3537 0%, #8AA8AB 100%) !important;
 }
 
 footer a {
@@ -166,20 +227,153 @@ footer a {
 }
 
 footer a:hover {
-    color: #0077cc !important;
-}
-
-/* Button hover effects */
-.btn-outline-primary {
-    transition: all 0.3s ease;
-}
-
-.btn-outline-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 119, 204, 0.3);
+    color: #C67C0C !important;
 }
 
 /* Stars styling */
 .stars i {
     font-size: 1.2rem;
 }
+
+/* Products Page Specific Styles */
+.filters-section {
+    background-color: #F9F3EF;
+}
+
+.product-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.product-card .card-img-top {
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.product-card .btn-primary {
+    background-color: #B0323A;
+    border-color: #B0323A;
+}
+
+.product-card .btn-primary:hover {
+    background-color: #8F262C;
+    border-color: #8F262C;
+}
+
+.product-card .btn-outline-primary {
+    color: #B0323A;
+    border-color: #B0323A;
+}
+
+.product-card .btn-outline-primary:hover {
+    background-color: #B0323A;
+    border-color: #B0323A;
+}
+
+.product-card .text-primary {
+    color: #B0323A !important;
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.cart-count {
+    font-size: 0.7rem;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+.filters-section .form-control:focus,
+.filters-section .form-select:focus {
+    border-color: #B0323A;
+    box-shadow: 0 0 0 0.2rem rgba(176, 50, 58, 0.25);
+}
+
+.toast {
+    background-color: #F9F3EF;
+}
+
+.badge.bg-secondary {
+    background-color: #8AA8AB !important;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Quick View Modal Enhancements */
+.modal-content {
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background-color: #F9F3EF;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Loading and Error States */
+.spinner-border.text-primary {
+    color: #B0323A !important;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 768px) {
+    .filters-section .row {
+        text-align: center;
+    }
+    
+    .filters-section .col-md-4,
+    .filters-section .col-md-3,
+    .filters-section .col-md-2 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .product-card .card-body {
+        text-align: center;
+    }
+    
+    .hero-section .col-md-4 {
+        text-align: center !important;
+        margin-top: 1rem;
+    }
+}
+
+/* Animation for product cards loading */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.product-card:nth-child(1) { animation-delay: 0.1s; }
+.product-card:nth-child(2) { animation-delay: 0.2s; }
+.product-card:nth-child(3) { animation-delay: 0.3s; }
+.product-card:nth-child(4) { animation-delay: 0.4s; }
+.product-card:nth-child(5) { animation-delay: 0.5s; }
+.product-card:nth-child(6) { animation-delay: 0.6s; }

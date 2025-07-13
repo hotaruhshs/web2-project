@@ -1,11 +1,162 @@
-<!-- Products XML Data -->
+<?xml version="1.0" encoding="UTF-8"?>
 <products>
-    <!-- Example product -->
+    <!-- TOPS CATEGORY -->
     <product>
         <id>1</id>
-        <name>Sample T-Shirt</name>
-        <price>19.99</price>
-        <image>images/sample-tshirt.jpg</image>
-        <description>Comfortable cotton t-shirt.</description>
+        <name>Classic Graphic Tee</name>
+        <price>1399.00</price>
+        <category>Tops</category>
+        <image>images/classic-graphic-tee.webp</image>
+        <description>Comfortable graphic t-shirt with classic design. Perfect for casual everyday wear.</description>
+        <sizes>S,M,L,XL</sizes>
+        <colors>Black,White,Gray</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>2</id>
+        <name>Classic Raglan Tee</name>
+        <price>1299.00</price>
+        <category>Tops</category>
+        <image>images/classic-raglan-tee.webp</image>
+        <description>Stylish raglan sleeve t-shirt with modern fit and comfortable fabric.</description>
+        <sizes>S,M,L,XL</sizes>
+        <colors>Navy,Gray,Black</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>3</id>
+        <name>Diabolik Tee</name>
+        <price>1499.00</price>
+        <category>Tops</category>
+        <image>images/diabolik-tee.webp</image>
+        <description>Unique design tee with eye-catching graphics. Stand out from the crowd.</description>
+        <sizes>S,M,L,XL,XXL</sizes>
+        <colors>Black,White,Red</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>4</id>
+        <name>Open Collar Shirt</name>
+        <price>2599.00</price>
+        <category>Tops</category>
+        <image>images/open-collar-shirt.webp</image>
+        <description>Casual open collar shirt perfect for smart casual occasions. Breathable and stylish.</description>
+        <sizes>S,M,L,XL,XXL</sizes>
+        <colors>White,Light Blue,Navy</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>5</id>
+        <name>Distortion Logo Crewneck Sweatshirt</name>
+        <price>3399.00</price>
+        <category>Tops</category>
+        <image>images/distortion-logo-crewneck-sweatshirt.webp</image>
+        <description>Comfortable crewneck sweatshirt with distortion logo design. Perfect for cooler weather.</description>
+        <sizes>S,M,L,XL,XXL</sizes>
+        <colors>Black,Gray,Navy</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>6</id>
+        <name>Slanted Pullover Hooded Sweatshirt</name>
+        <price>3699.00</price>
+        <category>Tops</category>
+        <image>images/slanted-pullover-hooded-sweatshirt.webp</image>
+        <description>Modern hooded sweatshirt with unique slanted design. Comfortable and trendy.</description>
+        <sizes>S,M,L,XL</sizes>
+        <colors>Gray,Black,Navy</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>7</id>
+        <name>Work Jacket</name>
+        <price>5099.00</price>
+        <category>Tops</category>
+        <image>images/work-jacket.webp</image>
+        <description>Durable work jacket with multiple pockets. Perfect for outdoor activities and work.</description>
+        <sizes>M,L,XL,XXL</sizes>
+        <colors>Khaki,Navy,Black</colors>
+        <inStock>true</inStock>
+    </product>
+
+    <!-- BOTTOMS CATEGORY -->
+    <product>
+        <id>8</id>
+        <name>Denim Pants</name>
+        <price>4499.00</price>
+        <category>Bottoms</category>
+        <image>images/denim-pants.webp</image>
+        <description>Classic denim pants with modern fit. Versatile and comfortable for everyday wear.</description>
+        <sizes>28,30,32,34,36,38</sizes>
+        <colors>Dark Blue,Light Blue,Black</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>9</id>
+        <name>Embroidered Nylon Short Pants</name>
+        <price>2299.00</price>
+        <category>Bottoms</category>
+        <image>images/embroidered-nylon-short-pants.webp</image>
+        <description>Comfortable nylon shorts with embroidered details. Perfect for casual summer wear.</description>
+        <sizes>S,M,L,XL</sizes>
+        <colors>Black,Navy,Gray</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>10</id>
+        <name>Work Pants</name>
+        <price>3999.00</price>
+        <category>Bottoms</category>
+        <image>images/work-pants.webp</image>
+        <description>Durable work pants with reinforced knees. Built for tough jobs and outdoor activities.</description>
+        <sizes>30,32,34,36,38,40</sizes>
+        <colors>Khaki,Navy,Black</colors>
+        <inStock>true</inStock>
+    </product>
+
+    <!-- ACCESSORIES CATEGORY -->
+    <product>
+        <id>11</id>
+        <name>Archives Baseball Cap</name>
+        <price>1699.00</price>
+        <category>Accessories</category>
+        <image>images/archives-baseball-cap.webp</image>
+        <description>Classic baseball cap with archives branding. Adjustable fit and comfortable wear.</description>
+        <sizes>One Size</sizes>
+        <colors>Black,Navy,Gray</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>12</id>
+        <name>Skater Kid Baseball Cap</name>
+        <price>1599.00</price>
+        <category>Accessories</category>
+        <image>images/skater-kid-baseball-cap.webp</image>
+        <description>Trendy skater-style baseball cap. Perfect for streetwear and casual outfits.</description>
+        <sizes>One Size</sizes>
+        <colors>Black,White,Red</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>13</id>
+        <name>Avenger Sunglasses</name>
+        <price>799.00</price>
+        <category>Accessories</category>
+        <image>images/avenger-sunglasses.webp</image>
+        <description>Stylish avenger-style sunglasses with UV protection. Perfect for sunny days.</description>
+        <sizes>One Size</sizes>
+        <colors>Black,Dark Gray,Brown</colors>
+        <inStock>true</inStock>
+    </product>
+    <product>
+        <id>14</id>
+        <name>Miami Vice Sunglasses</name>
+        <price>899.00</price>
+        <category>Accessories</category>
+        <image>images/miami-vice-sunglasses.webp</image>
+        <description>Retro Miami Vice inspired sunglasses. Classic style with modern UV protection.</description>
+        <sizes>One Size</sizes>
+        <colors>Black,Gold,Silver</colors>
+        <inStock>false</inStock>
     </product>
 </products>

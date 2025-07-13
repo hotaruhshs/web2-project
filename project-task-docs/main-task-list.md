@@ -3,8 +3,8 @@
 | Task ID | Task Description                          | Status     | Date Started | Date Completed |
 | ------- | ----------------------------------------- | ---------- | ------------ | -------------- |
 | 1       | Set up project folder structure           | Completed  | 2025-07-13   | 2025-07-13     |
-| 2       | Create homepage (`index.html`)            | Pending    |              |                |
-| 3       | Build product listing (`products.html`)   | Pending    |              |                |
+| 2       | Create homepage (`index.html`)            | Completed  | 2025-07-13   | 2025-07-13     |
+| 3       | Build product listing (`products.html`)   | Completed  | 2025-07-14   | 2025-07-14     |
 | 4       | Implement user registration (`register.html`, backend) | Pending    |              |                |
 | 5       | Implement user login (`login.html`, backend) | Pending    |              |                |
 | 6       | Develop user profile page (`profile.html`) | Pending    |              |                |
@@ -15,13 +15,15 @@
 | 11      | Build admin dashboard (`admin/admin-dashboard.html`) | Pending    |              |                |
 | 12      | Implement order management (`admin/admin-orders.php`) | Pending    |              |                |
 | 13      | Add product management (`admin/add-product.html`, `admin/edit-products.html`) | Pending    |              |                |
-| 14      | Set up product data (`data/products.xml`) | Pending    |              |                |
+| 14      | Set up product data (`data/products.xml`) | Completed  | 2025-07-14   | 2025-07-14     |
 | 15      | Set up user and order data (`data/users.json`, `data/orders.json`) | Pending    |              |                |
 | 16      | Implement backend PHP scripts (`php/`)    | Pending    |              |                |
-| 17      | Add CSS styling (`css/styles.css`)        | Pending    |              |                |
-| 18      | Add JavaScript logic (`js/script.js`)     | Pending    |              |                |
+| 17      | Add CSS styling (`css/styles.css`)        | In Progress| 2025-07-14   |                |
+| 18      | Add JavaScript logic (`js/script.js`)     | In Progress| 2025-07-14   |                |
 | 19      | Ensure accessibility and responsive design | Pending    |              |                |
 | 20      | Test all features and fix bugs            | Pending    |              |                |
+| 21      | Implement navigation highlighting system  | Completed  | 2025-07-14   | 2025-07-14     |
+| 22      | Standardize page layouts and footers     | Completed  | 2025-07-14   | 2025-07-14     |
 
 ---
 
