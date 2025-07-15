@@ -337,7 +337,8 @@ function addToCart(productId, productName, productPrice, productImage) {
             name: productName,
             price: productPrice,
             image: productImage,
-            quantity: 1
+            quantity: 1,
+            selected: true // Default to selected for new items
         });
     }
     
@@ -498,7 +499,8 @@ function addToCartWithOptions(productId, productName, productPrice, productImage
             size: size,
             color: color,
             quantity: 1,
-            uniqueId: uniqueId
+            uniqueId: uniqueId,
+            selected: true // Default to selected for new items
         });
     }
     
@@ -552,7 +554,7 @@ function highlightActiveNavigation() {
 // Authentication state management
 function checkAuthenticationState() {
     console.log('Checking authentication state...');
-    fetch('php/check_session.php', {
+    return fetch('php/check_session.php', {
         method: 'GET',
         credentials: 'include'
     })
@@ -571,6 +573,7 @@ function checkAuthenticationState() {
                 updateNavigationForLoggedOutUser();
                 displayProfile();
             }
+            return data.success;
         })
         .catch(error => {
             console.error('Error checking authentication state:', error);
@@ -578,6 +581,7 @@ function checkAuthenticationState() {
             isLoggedIn = false;
             updateNavigationForLoggedOutUser();
             displayProfile();
+            return false;
         });
 }
 
@@ -598,10 +602,17 @@ function updateNavigationForLoggedInUser() {
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         const isProfilePage = currentPage === 'profile.html';
         
+        // Check if user has a profile image
+        const hasProfileImage = currentUser.profile && currentUser.profile.profile_image;
+        const profileImageHtml = hasProfileImage 
+            ? `<img src="uploads/profiles/${currentUser.profile.profile_image}" class="rounded-circle me-2" style="width: 24px; height: 24px; object-fit: cover;" alt="Profile" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+               <i class="bi bi-person-circle me-2" style="display: none;"></i>`
+            : `<i class="bi bi-person-circle me-2"></i>`;
+        
         authSection.innerHTML = `
             <div class="dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center ${isProfilePage ? 'active' : ''}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle me-2"></i>${currentUser.username}
+                    ${profileImageHtml}${currentUser.username}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>Profile</a></li>
@@ -691,6 +702,7 @@ function checkLoginRedirect() {
 
 // Profile page functionality
 function displayProfile() {
+    console.log('=== displayProfile called ===');
     const profileLoading = document.getElementById('profile-loading');
     const profileContent = document.getElementById('profile-content');
     const notLoggedIn = document.getElementById('not-logged-in');
@@ -701,7 +713,8 @@ function displayProfile() {
         profileContent: !!profileContent,
         notLoggedIn: !!notLoggedIn,
         isLoggedIn: isLoggedIn,
-        currentUser: currentUser
+        currentUser: currentUser,
+        timestamp: new Date().toISOString()
     });
     
     if (!profileLoading || !profileContent || !notLoggedIn) {
@@ -711,12 +724,114 @@ function displayProfile() {
     
     if (isLoggedIn && currentUser) {
         console.log('User is logged in, displaying profile');
-        // Display user information
-        document.getElementById('profile-username').textContent = currentUser.username;
-        document.getElementById('profile-email').textContent = currentUser.email;
-        document.getElementById('profile-id').textContent = currentUser.id;
-        document.getElementById('profile-created').textContent = formatDate(currentUser.created_at);
-        document.getElementById('profile-status').textContent = currentUser.status ? (currentUser.status.charAt(0).toUpperCase() + currentUser.status.slice(1)) : 'Active';
+        
+        // Display user information with error handling
+        try {
+            const usernameElement = document.getElementById('profile-username');
+            const emailElement = document.getElementById('profile-email');
+            const firstNameElement = document.getElementById('profile-first-name');
+            const lastNameElement = document.getElementById('profile-last-name');
+            const phoneElement = document.getElementById('profile-phone');
+            const addressElement = document.getElementById('profile-address');
+            const createdElement = document.getElementById('profile-created');
+            const statusElement = document.getElementById('profile-status');
+            
+            console.log('Profile elements check:', {
+                usernameElement: !!usernameElement,
+                emailElement: !!emailElement,
+                firstNameElement: !!firstNameElement,
+                lastNameElement: !!lastNameElement,
+                phoneElement: !!phoneElement,
+                addressElement: !!addressElement,
+                createdElement: !!createdElement,
+                statusElement: !!statusElement
+            });
+            
+            if (usernameElement) usernameElement.textContent = currentUser.username;
+            if (emailElement) emailElement.textContent = currentUser.email;
+            if (createdElement) createdElement.textContent = formatDate(currentUser.created_at);
+            if (statusElement) statusElement.textContent = currentUser.status ? (currentUser.status.charAt(0).toUpperCase() + currentUser.status.slice(1)) : 'Active';
+            
+            // Handle profile fields
+            if (currentUser.profile) {
+                if (firstNameElement) firstNameElement.textContent = currentUser.profile.first_name || '-';
+                if (lastNameElement) lastNameElement.textContent = currentUser.profile.last_name || '-';
+                if (phoneElement) phoneElement.textContent = currentUser.profile.phone || '-';
+                
+                // Handle profile image
+                const profileImage = document.getElementById('profile-image');
+                const profileImagePlaceholder = document.getElementById('profile-image-placeholder');
+                
+                if (profileImage && profileImagePlaceholder) {
+                    if (currentUser.profile.profile_image) {
+                        const imageUrl = 'uploads/profiles/' + currentUser.profile.profile_image;
+                        
+                        // Add onload event to ensure proper display
+                        profileImage.onload = function() {
+                            profileImage.style.display = 'block';
+                            profileImagePlaceholder.style.display = 'none';
+                            console.log('Profile image loaded successfully');
+                        };
+                        
+                        // Add onerror event in case image fails to load
+                        profileImage.onerror = function() {
+                            console.error('Failed to load profile image:', imageUrl);
+                            profileImage.style.display = 'none';
+                            profileImagePlaceholder.style.display = 'flex';
+                        };
+                        
+                        // Set the image source to trigger loading
+                        profileImage.src = imageUrl;
+                    } else {
+                        // No profile image - show placeholder
+                        profileImage.style.display = 'none';
+                        profileImagePlaceholder.style.display = 'flex';
+                    }
+                }
+                
+                // Handle individual address fields
+                const streetElement = document.getElementById('profile-street');
+                const cityElement = document.getElementById('profile-city');
+                const provinceElement = document.getElementById('profile-province');
+                const barangayElement = document.getElementById('profile-barangay');
+                
+                if (streetElement) streetElement.textContent = currentUser.profile.address?.street || '-';
+                if (cityElement) cityElement.textContent = currentUser.profile.address?.city || '-';
+                if (provinceElement) provinceElement.textContent = currentUser.profile.address?.province || '-';
+                if (barangayElement) barangayElement.textContent = currentUser.profile.address?.barangay || '-';
+            } else {
+                // If no profile data, show dashes
+                if (firstNameElement) firstNameElement.textContent = '-';
+                if (lastNameElement) lastNameElement.textContent = '-';
+                if (phoneElement) phoneElement.textContent = '-';
+                
+                // Hide profile image and show placeholder
+                const profileImage = document.getElementById('profile-image');
+                const profileImagePlaceholder = document.getElementById('profile-image-placeholder');
+                
+                if (profileImage && profileImagePlaceholder) {
+                    profileImage.style.display = 'none';
+                    profileImagePlaceholder.style.display = 'flex';
+                }
+                
+                const streetElement = document.getElementById('profile-street');
+                const cityElement = document.getElementById('profile-city');
+                const provinceElement = document.getElementById('profile-province');
+                const barangayElement = document.getElementById('profile-barangay');
+                
+                if (streetElement) streetElement.textContent = '-';
+                if (cityElement) cityElement.textContent = '-';
+                if (provinceElement) provinceElement.textContent = '-';
+                if (barangayElement) barangayElement.textContent = '-';
+            }
+            
+            // Initialize profile editing functionality
+            initProfileEditing();
+            
+            console.log('Profile elements updated successfully');
+        } catch (error) {
+            console.error('Error updating profile elements:', error);
+        }
         
         // Show profile content
         profileLoading.classList.add('d-none');
@@ -740,6 +855,874 @@ function formatDate(dateString) {
         day: 'numeric'
     });
 }
+
+// ==================== CART FUNCTIONALITY ====================
+
+// Cart management functions
+function loadCartPage() {
+    console.log('Loading cart page...');
+    displayCartItems();
+    updateCartSummary();
+    updateCartCount();
+}
+
+// Display cart items on cart page
+function displayCartItems() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItemsContainer = document.getElementById('cart-items');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartSummary = document.getElementById('cart-summary');
+    
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '';
+        emptyCartMessage.style.display = 'block';
+        cartSummary.style.display = 'none';
+        return;
+    }
+    
+    emptyCartMessage.style.display = 'none';
+    cartSummary.style.display = 'block';
+    
+    // Add select all header
+    const selectAllHTML = `
+        <div class="card mb-3 bg-light">
+            <div class="card-body py-2">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   id="select-all-checkbox">
+                            <label class="form-check-label fw-bold" for="select-all-checkbox">
+                                Select All Items
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <small class="text-muted">Select items to include in checkout</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    cartItemsContainer.innerHTML = selectAllHTML + cart.map(item => createCartItemHTML(item)).join('');
+    
+    // Add event listeners for cart interactions
+    addCartItemEventListeners();
+    
+    // Add select all checkbox event listener
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            toggleSelectAll(this.checked);
+        });
+    }
+    
+    // Update select all checkbox state
+    updateSelectAllCheckbox();
+}
+
+// Create HTML for individual cart item
+function createCartItemHTML(item) {
+    const itemTotal = item.price * item.quantity;
+    const sizeColorInfo = (item.size || item.color) ? 
+        `<p class="text-muted mb-0">
+            ${item.size ? `Size: ${item.size}` : ''}${item.size && item.color ? ', ' : ''}${item.color ? `Color: ${item.color}` : ''}
+        </p>` : '';
+    
+    // Check if item is selected (default to true for new items)
+    const isSelected = item.selected !== false;
+    
+    return `
+        <div class="card mb-3 cart-item" data-item-id="${item.uniqueId || item.id}">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-1">
+                        <div class="form-check">
+                            <input class="form-check-input item-checkbox" 
+                                   type="checkbox" 
+                                   ${isSelected ? 'checked' : ''}
+                                   data-item-id="${item.uniqueId || item.id}"
+                                   id="checkbox-${item.uniqueId || item.id}">
+                            <label class="form-check-label" for="checkbox-${item.uniqueId || item.id}"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="${item.image}" class="img-fluid rounded" alt="${item.name}">
+                    </div>
+                    <div class="col-md-3">
+                        <h6 class="card-title mb-1">${item.name}</h6>
+                        ${sizeColorInfo}
+                        <p class="text-primary mb-0">₱${formatPriceWithCommas(item.price)}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-secondary btn-sm quantity-btn" 
+                                    data-action="decrease" 
+                                    data-item-id="${item.uniqueId || item.id}">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <span class="mx-3 quantity-display">${item.quantity}</span>
+                            <button class="btn btn-outline-secondary btn-sm quantity-btn" 
+                                    data-action="increase" 
+                                    data-item-id="${item.uniqueId || item.id}">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <p class="mb-0 fw-bold">₱${formatPriceWithCommas(itemTotal)}</p>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-danger btn-sm remove-item-btn" 
+                                data-item-id="${item.uniqueId || item.id}"
+                                title="Remove item">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Add event listeners for cart item interactions
+function addCartItemEventListeners() {
+    // Quantity change buttons
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            const action = this.dataset.action;
+            updateCartItemQuantity(itemId, action);
+        });
+    });
+    
+    // Remove item buttons
+    document.querySelectorAll('.remove-item-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            removeCartItem(itemId);
+        });
+    });
+    
+    // Item selection checkboxes
+    document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const itemId = this.dataset.itemId;
+            updateItemSelection(itemId, this.checked);
+        });
+    });
+}
+
+// Update item quantity in cart
+function updateCartItemQuantity(itemId, action) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    const itemIndex = cart.findIndex(item => (item.uniqueId || item.id) === itemId);
+    
+    if (itemIndex > -1) {
+        if (action === 'increase') {
+            cart[itemIndex].quantity += 1;
+        } else if (action === 'decrease') {
+            if (cart[itemIndex].quantity > 1) {
+                cart[itemIndex].quantity -= 1;
+            } else {
+                // Remove item if quantity becomes 0
+                cart.splice(itemIndex, 1);
+            }
+        }
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCartItems();
+        updateCartSummary();
+        updateCartCount();
+    }
+}
+
+// Remove item from cart
+function removeCartItem(itemId) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    const itemIndex = cart.findIndex(item => (item.uniqueId || item.id) === itemId);
+    
+    if (itemIndex > -1) {
+        cart.splice(itemIndex, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCartItems();
+        updateCartSummary();
+        updateCartCount();
+        
+        // Show removal toast
+        showCartUpdateToast('Item removed from cart');
+    }
+}
+
+// Update item selection status
+function updateItemSelection(itemId, isSelected) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    const itemIndex = cart.findIndex(item => (item.uniqueId || item.id) === itemId);
+    
+    if (itemIndex > -1) {
+        cart[itemIndex].selected = isSelected;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartSummary();
+        updateSelectAllCheckbox();
+    }
+}
+
+// Update cart summary (totals, shipping, etc.) - only for selected items
+function updateCartSummary() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const selectedItems = cart.filter(item => item.selected !== false);
+    
+    const totalItems = selectedItems.reduce((total, item) => total + item.quantity, 0);
+    const subtotal = selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const shipping = subtotal >= 2000 ? 0 : (subtotal > 0 ? 150 : 0); // Free shipping for orders over ₱2000, no shipping if no items selected
+    const total = subtotal + shipping;
+    
+    // Update summary display
+    document.getElementById('total-items').textContent = totalItems;
+    document.getElementById('subtotal').textContent = `₱${formatPriceWithCommas(subtotal)}`;
+    document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `₱${formatPriceWithCommas(shipping)}`;
+    document.getElementById('total-price').textContent = `₱${formatPriceWithCommas(total)}`;
+    
+    // Enable/disable checkout button based on selected items
+    const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.disabled = selectedItems.length === 0;
+    }
+}
+
+// Update select all checkbox state
+function updateSelectAllCheckbox() {
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    if (selectAllCheckbox) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const selectedItems = cart.filter(item => item.selected !== false);
+        
+        if (cart.length === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        } else if (selectedItems.length === cart.length) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+        } else if (selectedItems.length === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+        }
+    }
+}
+
+// Toggle selection of all items
+function toggleSelectAll(selectAll) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    cart.forEach(item => {
+        item.selected = selectAll;
+    });
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Update all checkboxes
+    document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+        checkbox.checked = selectAll;
+    });
+    
+    updateCartSummary();
+}
+
+// Remove selected items from cart (used after successful checkout)
+function removeSelectedItems() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Filter out selected items, keeping only unselected ones
+    cart = cart.filter(item => item.selected === false);
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+}
+
+// Clear entire cart
+function clearCart() {
+    localStorage.removeItem('cart');
+    displayCartItems();
+    updateCartSummary();
+    updateCartCount();
+    showCartUpdateToast('Cart cleared');
+}
+
+// Show cart update toast notification
+function showCartUpdateToast(message) {
+    // Create toast HTML if it doesn't exist
+    if (!document.getElementById('cartUpdateToast')) {
+        const toastHTML = `
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div id="cartUpdateToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <i class="bi bi-cart-check text-success me-2"></i>
+                        <strong class="me-auto">Cart Update</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body" id="cartUpdateToastBody">
+                        ${message}
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', toastHTML);
+    }
+    
+    // Update message and show toast
+    document.getElementById('cartUpdateToastBody').textContent = message;
+    const toast = new bootstrap.Toast(document.getElementById('cartUpdateToast'));
+    toast.show();
+}
+
+// Get cart total for checkout
+function getCartTotal() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const shipping = subtotal >= 2000 ? 0 : 150;
+    return subtotal + shipping;
+}
+
+// Get cart items for checkout (only selected items)
+function getCartItems() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    return cart.filter(item => item.selected !== false);
+}
+
+// Get all cart items (including unselected ones)
+function getAllCartItems() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+// Initialize cart page functionality
+function initializeCartPage() {
+    // Check if we're on the cart page
+    if (window.location.pathname.includes('cart.html')) {
+        loadCartPage();
+        
+        // Add checkout button event listener
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    window.location.href = 'checkout.html';
+                }
+            });
+        }
+    }
+}
+
+// ==================== END CART FUNCTIONALITY ====================
+
+// ==================== CHECKOUT FUNCTIONALITY ====================
+
+// Checkout page functionality
+function initializeCheckoutPage() {
+    console.log('Initializing checkout page...');
+    
+    const checkoutForm = document.getElementById('checkout-form');
+    const paymentMethodSelect = document.getElementById('paymentMethod');
+    const cardDetailsSection = document.getElementById('card-details');
+    const emptyCartWarning = document.getElementById('empty-cart-warning');
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    
+    if (checkoutForm) {
+        // Check if cart is empty
+        const cart = getCartItems();
+        if (cart.length === 0) {
+            if (emptyCartWarning) emptyCartWarning.classList.remove('d-none');
+            if (placeOrderBtn) placeOrderBtn.disabled = true;
+            checkoutForm.style.opacity = '0.5';
+        } else {
+            if (emptyCartWarning) emptyCartWarning.classList.add('d-none');
+            if (placeOrderBtn) placeOrderBtn.disabled = false;
+            checkoutForm.style.opacity = '1';
+        }
+        
+        // Load order summary
+        loadOrderSummary();
+        
+        // Pre-fill form if user is logged in (with a small delay to ensure form is ready)
+        setTimeout(() => {
+            prefillFormFromProfile();
+        }, 100);
+        
+        // Handle payment method change
+        if (paymentMethodSelect) {
+            paymentMethodSelect.addEventListener('change', function() {
+                if (this.value === 'credit_card' || this.value === 'debit_card') {
+                    cardDetailsSection.style.display = 'block';
+                    makeCardFieldsRequired(true);
+                } else {
+                    cardDetailsSection.style.display = 'none';
+                    makeCardFieldsRequired(false);
+                }
+            });
+        }
+        
+        // Handle form submission
+        console.log('Adding form submission event listener');
+        checkoutForm.addEventListener('submit', function(e) {
+            console.log('Form submission event triggered');
+            e.preventDefault();
+            handleOrderSubmission();
+        });
+        
+        // Format card number input
+        const cardNumberInput = document.getElementById('cardNumber');
+        if (cardNumberInput) {
+            cardNumberInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                e.target.value = formattedValue;
+            });
+        }
+        
+        // Format expiry date input
+        const expiryInput = document.getElementById('expiryDate');
+        if (expiryInput) {
+            expiryInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+        }
+        
+        // Format CVV input
+        const cvvInput = document.getElementById('cvv');
+        if (cvvInput) {
+            cvvInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+            });
+        }
+    }
+}
+
+// Load order summary from cart
+function loadOrderSummary() {
+    const cart = getCartItems();
+    const orderItemsContainer = document.getElementById('order-items');
+    const subtotalElement = document.getElementById('order-subtotal');
+    const shippingElement = document.getElementById('order-shipping');
+    const totalElement = document.getElementById('order-total');
+    
+    if (!orderItemsContainer) return;
+    
+    // Clear existing items
+    orderItemsContainer.innerHTML = '';
+    
+    if (cart.length === 0) {
+        orderItemsContainer.innerHTML = '<p class="text-dark">Your cart is empty</p>';
+        if (subtotalElement) subtotalElement.textContent = '₱0.00';
+        if (shippingElement) shippingElement.textContent = '₱0.00';
+        if (totalElement) totalElement.textContent = '₱0.00';
+        return;
+    }
+    
+    let subtotal = 0;
+    
+    // Display each cart item with image
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        // Handle missing image
+        const itemImage = item.image || 'images/classic-graphic-tee.webp';
+        
+        const itemElement = document.createElement('div');
+        itemElement.className = 'd-flex align-items-center mb-3 p-2 border rounded';
+        itemElement.innerHTML = `
+            <div class="me-3">
+                <img src="${itemImage}" alt="${item.name}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" 
+                     onerror="this.src='images/classic-graphic-tee.webp'">
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="mb-1 text-dark">${item.name}</h6>
+                <div class="d-flex align-items-center small" style="color: #333;">
+                    <span class="me-2">Qty: ${item.quantity}</span>
+                    ${item.quantity > 1 ? `<span style="color: #666;">× ₱${item.price.toFixed(2)}</span>` : ''}
+                </div>
+                ${item.size ? `<small class="d-block" style="color: #666;">Size: ${item.size}</small>` : ''}
+                ${item.color ? `<small class="d-block" style="color: #666;">Color: ${item.color}</small>` : ''}
+            </div>
+            <div class="text-end">
+                <span class="fw-bold text-dark">₱${itemTotal.toFixed(2)}</span>
+                ${item.quantity === 1 ? `<br><small style="color: #666;">₱${item.price.toFixed(2)}</small>` : ''}
+            </div>
+        `;
+        orderItemsContainer.appendChild(itemElement);
+    });
+    
+    // Calculate shipping
+    const shipping = subtotal >= 2000 ? 0 : 150;
+    const total = subtotal + shipping;
+    
+    // Update totals
+    if (subtotalElement) subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+    if (shippingElement) {
+        shippingElement.textContent = `₱${shipping.toFixed(2)}`;
+        shippingElement.className = shipping === 0 ? 'text-success' : '';
+    }
+    if (totalElement) totalElement.textContent = `₱${total.toFixed(2)}`;
+}
+
+// Pre-fill form with user profile data if logged in
+function prefillFormFromProfile() {
+    console.log('Prefilling form with profile data...');
+    console.log('Current user:', currentUser);
+    console.log('Is logged in:', isLoggedIn);
+    
+    if (!isLoggedIn || !currentUser) {
+        console.log('User not logged in or currentUser is null');
+        return;
+    }
+    
+    let hasFilledData = false;
+    
+    try {
+        const profile = currentUser.profile;
+        console.log('User profile:', profile);
+        
+        // Fill personal information
+        if (profile?.first_name) {
+            const firstNameField = document.getElementById('firstName');
+            if (firstNameField) {
+                firstNameField.value = profile.first_name;
+                hasFilledData = true;
+                console.log('Set firstName:', profile.first_name);
+            }
+        }
+        
+        if (profile?.last_name) {
+            const lastNameField = document.getElementById('lastName');
+            if (lastNameField) {
+                lastNameField.value = profile.last_name;
+                hasFilledData = true;
+                console.log('Set lastName:', profile.last_name);
+            }
+        }
+        
+        if (currentUser.email) {
+            const emailField = document.getElementById('email');
+            if (emailField) {
+                emailField.value = currentUser.email;
+                hasFilledData = true;
+                console.log('Set email:', currentUser.email);
+            }
+        }
+        
+        if (profile?.phone) {
+            const phoneField = document.getElementById('phone');
+            if (phoneField) {
+                phoneField.value = profile.phone;
+                hasFilledData = true;
+                console.log('Set phone:', profile.phone);
+            }
+        }
+        
+        // Fill address information
+        if (profile?.address) {
+            const address = profile.address;
+            console.log('Address data:', address);
+            
+            if (address.street) {
+                const addressField = document.getElementById('address');
+                if (addressField) {
+                    addressField.value = address.street;
+                    hasFilledData = true;
+                    console.log('Set address:', address.street);
+                }
+            }
+            
+            if (address.city) {
+                const cityField = document.getElementById('city');
+                if (cityField) {
+                    cityField.value = address.city;
+                    hasFilledData = true;
+                    console.log('Set city:', address.city);
+                }
+            }
+            
+            if (address.province) {
+                const stateField = document.getElementById('state');
+                if (stateField) {
+                    stateField.value = address.province;
+                    hasFilledData = true;
+                    console.log('Set state/province:', address.province);
+                }
+            }
+            
+            if (address.barangay) {
+                const zipField = document.getElementById('zipCode');
+                if (zipField) {
+                    zipField.value = address.barangay;
+                    hasFilledData = true;
+                    console.log('Set barangay:', address.barangay);
+                }
+            }
+        }
+        
+        // Show notification if data was filled
+        if (hasFilledData) {
+            const notification = document.getElementById('autofill-notification');
+            if (notification) {
+                notification.classList.remove('d-none');
+                // Hide notification after 5 seconds
+                setTimeout(() => {
+                    notification.classList.add('d-none');
+                }, 5000);
+            }
+        }
+        
+        console.log('Form prefill completed successfully');
+    } catch (error) {
+        console.error('Error prefilling form:', error);
+    }
+}
+
+// Make card fields required or optional
+function makeCardFieldsRequired(required) {
+    const cardFields = ['cardNumber', 'expiryDate', 'cvv'];
+    cardFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            if (required) {
+                field.setAttribute('required', 'required');
+            } else {
+                field.removeAttribute('required');
+            }
+        }
+    });
+}
+
+// Handle order submission
+function handleOrderSubmission() {
+    console.log('handleOrderSubmission called');
+    
+    const form = document.getElementById('checkout-form');
+    const submitBtn = document.getElementById('place-order-btn');
+    
+    console.log('Form element:', form);
+    console.log('Submit button:', submitBtn);
+    
+    // Validate form
+    if (!form.checkValidity()) {
+        console.log('Form validation failed');
+        form.classList.add('was-validated');
+        return;
+    }
+    
+    console.log('Form validation passed');
+    
+    // Get cart items
+    const cartItems = getCartItems();
+    console.log('Cart items:', cartItems);
+    
+    if (cartItems.length === 0) {
+        console.log('Cart is empty');
+        showToast('Your cart is empty', 'error');
+        return;
+    }
+    
+    // Calculate totals
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = subtotal >= 2000 ? 0 : 150;
+    const total = subtotal + shipping;
+    
+    // Prepare order data
+    const orderData = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        zipCode: document.getElementById('zipCode').value.trim(),
+        paymentMethod: document.getElementById('paymentMethod').value,
+        orderNotes: document.getElementById('orderNotes').value.trim(),
+        cartItems: cartItems,
+        subtotal: subtotal,
+        shipping: shipping,
+        total: total
+    };
+    
+    // Add card details if payment method requires it
+    if (orderData.paymentMethod === 'credit_card' || orderData.paymentMethod === 'debit_card') {
+        orderData.cardNumber = document.getElementById('cardNumber').value.trim();
+        orderData.expiryDate = document.getElementById('expiryDate').value.trim();
+        orderData.cvv = document.getElementById('cvv').value.trim();
+    }
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing Order...';
+    
+    // Submit order
+    console.log('Submitting order data:', orderData);
+    
+    fetch('php/submit_order.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+        // Check if response is ok
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Try to parse as JSON
+        return response.json();
+    })
+    .then(data => {
+        console.log('Order submission response:', data);
+        if (data.success) {
+            // Store cart items for thank you page before removing them
+            localStorage.setItem('orderItems', JSON.stringify(cartItems));
+            
+            // Remove only selected items from cart
+            removeSelectedItems();
+            
+            // Store order details for thank you page
+            localStorage.setItem('lastOrder', JSON.stringify(data.data));
+            
+            // Show success message
+            showToast('Order placed successfully!', 'success');
+            
+            // Redirect to thank you page with order ID
+            setTimeout(() => {
+                window.location.href = `thankyou.html?orderId=${data.data.orderId}`;
+            }, 1000);
+        } else {
+            console.error('Order submission failed:', data.message);
+            showToast(data.message || 'Failed to place order. Please try again.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting order:', error);
+        
+        // More detailed error handling
+        if (error.message.includes('HTTP error')) {
+            showToast('Server error occurred. Please check if the server is running and try again.', 'error');
+        } else if (error.message.includes('Failed to fetch')) {
+            showToast('Network error. Please check your connection and try again.', 'error');
+        } else {
+            showToast('An error occurred while placing your order. Please try again.', 'error');
+        }
+    })
+    .finally(() => {
+        // Restore button state
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-credit-card me-2"></i>Place Order';
+    });
+}
+
+// Validate card number (basic Luhn algorithm)
+function validateCardNumber(cardNumber) {
+    const cleanNumber = cardNumber.replace(/\s+/g, '');
+    if (!/^\d{13,19}$/.test(cleanNumber)) return false;
+    
+    let sum = 0;
+    let shouldDouble = false;
+    
+    for (let i = cleanNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cleanNumber.charAt(i));
+        
+        if (shouldDouble) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+        }
+        
+        sum += digit;
+        shouldDouble = !shouldDouble;
+    }
+    
+    return sum % 10 === 0;
+}
+
+// Validate expiry date
+function validateExpiryDate(expiryDate) {
+    const match = expiryDate.match(/^(\d{2})\/(\d{2})$/);
+    if (!match) return false;
+    
+    const month = parseInt(match[1]);
+    const year = parseInt('20' + match[2]);
+    
+    if (month < 1 || month > 12) return false;
+    
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        return false;
+    }
+    
+    return true;
+}
+
+// ==================== THANK YOU PAGE FUNCTIONALITY ====================
+
+// Thank you page functionality
+function initializeThankYouPage() {
+    const lastOrder = localStorage.getItem('lastOrder');
+    
+    if (lastOrder) {
+        const orderData = JSON.parse(lastOrder);
+        displayOrderConfirmation(orderData);
+        
+        // Clear the stored order data
+        localStorage.removeItem('lastOrder');
+    } else {
+        // If no order data, redirect to home
+        window.location.href = 'index.html';
+    }
+}
+
+// Display order confirmation details
+function displayOrderConfirmation(orderData) {
+    const orderIdElement = document.getElementById('order-id');
+    const orderDateElement = document.getElementById('order-date');
+    const orderTotalElement = document.getElementById('order-total');
+    
+    if (orderIdElement) orderIdElement.textContent = orderData.orderId;
+    if (orderDateElement) orderDateElement.textContent = new Date(orderData.orderDate).toLocaleDateString();
+    if (orderTotalElement) orderTotalElement.textContent = `₱${orderData.total.toFixed(2)}`;
+}
+
+// Initialize checkout functionality when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired');
+    const currentPage = window.location.pathname.split('/').pop();
+    console.log('Current page:', currentPage);
+    
+    if (currentPage === 'checkout.html') {
+        console.log('Initializing checkout page');
+        // Wait for authentication check to complete before initializing checkout
+        checkAuthenticationState().then(() => {
+            console.log('Authentication check completed, initializing checkout');
+            initializeCheckoutPage();
+        });
+    } else if (currentPage === 'thankyou.html') {
+        initializeThankYouPage();
+    }
+});
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -766,6 +1749,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update cart count on all pages
     updateCartCount();
+    
+    // Initialize cart page functionality
+    initializeCartPage();
 });
 
 // Initialize navigation highlighting for all pages
@@ -1189,4 +2175,417 @@ function showErrorMessage(message) {
 function clearMessages() {
     const existingAlerts = document.querySelectorAll('.alert');
     existingAlerts.forEach(alert => alert.remove());
+}
+
+// Profile editing functionality
+function initProfileEditing() {
+    const editBtn = document.getElementById('edit-profile-btn');
+    const saveBtn = document.getElementById('save-profile-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    
+    if (editBtn) {
+        editBtn.addEventListener('click', enableProfileEditing);
+    }
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveProfileChanges);
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', cancelProfileEditing);
+    }
+    
+    // Add image upload functionality
+    const profileImageInput = document.getElementById('profile-image-input');
+    if (profileImageInput) {
+        profileImageInput.addEventListener('change', handleProfileImageUpload);
+    }
+}
+
+function enableProfileEditing() {
+    // Hide display elements and show edit inputs
+    document.querySelectorAll('.profile-display').forEach(element => {
+        element.classList.add('d-none');
+    });
+    
+    document.querySelectorAll('.profile-edit').forEach(element => {
+        element.classList.remove('d-none');
+    });
+    
+    // Populate edit fields with current values
+    if (currentUser.profile) {
+        document.getElementById('edit-first-name').value = currentUser.profile.first_name || '';
+        document.getElementById('edit-last-name').value = currentUser.profile.last_name || '';
+        document.getElementById('edit-phone').value = currentUser.profile.phone || '';
+        
+        if (currentUser.profile.address) {
+            document.getElementById('edit-street').value = currentUser.profile.address.street || '';
+            document.getElementById('edit-city').value = currentUser.profile.address.city || '';
+            document.getElementById('edit-province').value = currentUser.profile.address.province || '';
+            document.getElementById('edit-barangay').value = currentUser.profile.address.barangay || '';
+        }
+    }
+    
+    // Toggle buttons
+    document.getElementById('edit-profile-btn').classList.add('d-none');
+    document.getElementById('save-profile-btn').classList.remove('d-none');
+    document.getElementById('cancel-edit-btn').classList.remove('d-none');
+}
+
+function cancelProfileEditing() {
+    console.log('cancelProfileEditing called');
+    
+    // Show display elements and hide edit inputs
+    document.querySelectorAll('.profile-display').forEach(element => {
+        element.classList.remove('d-none');
+    });
+    
+    document.querySelectorAll('.profile-edit').forEach(element => {
+        console.log('Hiding profile-edit element:', element);
+        element.classList.add('d-none');
+    });
+    
+    // Specifically hide camera overlay
+    const cameraOverlay = document.querySelector('.profile-image-container .profile-edit');
+    if (cameraOverlay) {
+        cameraOverlay.classList.add('d-none');
+        console.log('Camera overlay hidden');
+    }
+    
+    // Toggle buttons
+    document.getElementById('edit-profile-btn').classList.remove('d-none');
+    document.getElementById('save-profile-btn').classList.add('d-none');
+    document.getElementById('cancel-edit-btn').classList.add('d-none');
+}
+
+function saveProfileChanges() {
+    const saveBtn = document.getElementById('save-profile-btn');
+    const originalText = saveBtn.innerHTML;
+    
+    // Show loading state
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+    saveBtn.disabled = true;
+    
+    // Collect form data
+    const profileData = {
+        first_name: document.getElementById('edit-first-name').value.trim(),
+        last_name: document.getElementById('edit-last-name').value.trim(),
+        phone: document.getElementById('edit-phone').value.trim(),
+        address: {
+            street: document.getElementById('edit-street').value.trim(),
+            city: document.getElementById('edit-city').value.trim(),
+            province: document.getElementById('edit-province').value.trim(),
+            barangay: document.getElementById('edit-barangay').value.trim()
+        }
+    };
+    
+    // Send update request
+    fetch('php/update_profile.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update current user data
+            currentUser.profile = profileData;
+            
+            // Update display elements
+            updateProfileDisplay();
+            
+            // Exit edit mode
+            cancelProfileEditing();
+            
+            // Show success message
+            showProfileUpdateSuccess('Profile updated successfully!');
+        } else {
+            showProfileUpdateError(data.message || 'Failed to update profile');
+        }
+    })
+    .catch(error => {
+        console.error('Profile update error:', error);
+        showProfileUpdateError('An error occurred while updating your profile');
+    })
+    .finally(() => {
+        // Reset button state
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    });
+}
+
+// Profile image upload functionality
+function handleProfileImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        showProfileUpdateError('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.');
+        return;
+    }
+    
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+        showProfileUpdateError('File too large. Maximum size is 5MB.');
+        return;
+    }
+    
+    // Show immediate preview using FileReader for instant feedback
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const profileImage = document.getElementById('profile-image');
+        const profileImagePlaceholder = document.getElementById('profile-image-placeholder');
+        
+        if (profileImage && profileImagePlaceholder) {
+            // Show preview immediately
+            profileImage.src = e.target.result;
+            profileImage.style.display = 'block';
+            profileImagePlaceholder.style.display = 'none';
+        }
+    };
+    reader.readAsDataURL(file);
+    
+    // Show loading state on upload button
+    const uploadButton = document.querySelector('button[onclick*="profile-image-input"]');
+    if (uploadButton) {
+        uploadButton.innerHTML = '<div class="spinner-border spinner-border-sm text-white" style="width: 16px; height: 16px;"></div>';
+        uploadButton.disabled = true;
+    }
+    
+    // Create FormData for upload
+    const formData = new FormData();
+    formData.append('profile_image', file);
+    
+    // Upload image with faster response handling
+    fetch('php/upload_profile_image.php', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+    })
+    .then(response => {
+        console.log('Upload response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Upload response data:', data);
+        if (data.success) {
+            // Update current user data immediately (no server refresh needed)
+            if (!currentUser.profile) {
+                currentUser.profile = {};
+            }
+            // The response structure is: data.data.image_url
+            const imageUrl = data.data?.image_url || '';
+            if (imageUrl) {
+                currentUser.profile.profile_image = imageUrl.split('/').pop(); // Extract filename
+                
+                // Update the preview with the actual uploaded image URL
+                const profileImage = document.getElementById('profile-image');
+                if (profileImage) {
+                    profileImage.src = imageUrl;
+                }
+            }
+            
+            // Exit edit mode immediately
+            cancelProfileEditing();
+            
+            // Update navigation to show new profile picture
+            updateNavigationForLoggedInUser();
+            
+            // Show success message
+            showProfileUpdateSuccess('Profile image updated successfully!');
+        } else {
+            showProfileUpdateError(data.message || 'Failed to upload image');
+        }
+    })
+    .catch(error => {
+        console.error('Image upload error:', error);
+        showProfileUpdateError('An error occurred while uploading the image: ' + error.message);
+        
+        // Restore placeholder on error
+        const profileImage = document.getElementById('profile-image');
+        const profileImagePlaceholder = document.getElementById('profile-image-placeholder');
+        if (profileImage && profileImagePlaceholder) {
+            profileImage.style.display = 'none';
+            profileImagePlaceholder.style.display = 'flex';
+        }
+    })
+    .finally(() => {
+        // Reset button state
+        if (uploadButton) {
+            uploadButton.innerHTML = '<i class="bi bi-camera text-white"></i>';
+            uploadButton.disabled = false;
+        }
+        
+        // Clear file input
+        event.target.value = '';
+    });
+}
+
+// Update profile display after changes
+function updateProfileDisplay() {
+    // Update profile image
+    const profileImage = document.getElementById('profile-image');
+    const profileImagePlaceholder = document.getElementById('profile-image-placeholder');
+    
+    if (profileImage && profileImagePlaceholder) {
+        if (currentUser.profile?.profile_image) {
+            const imageUrl = 'uploads/profiles/' + currentUser.profile.profile_image;
+            
+            // Add onload event to ensure proper display
+            profileImage.onload = function() {
+                profileImage.style.display = 'block';
+                profileImagePlaceholder.style.display = 'none';
+                console.log('Profile image loaded and displayed');
+            };
+            
+            // Add onerror event in case image fails to load
+            profileImage.onerror = function() {
+                console.error('Failed to load profile image:', imageUrl);
+                profileImage.style.display = 'none';
+                profileImagePlaceholder.style.display = 'flex';
+            };
+            
+            // Force hide placeholder immediately and show image
+            profileImagePlaceholder.style.display = 'none';
+            profileImage.style.display = 'block';
+            profileImage.src = imageUrl;
+        } else {
+            profileImage.style.display = 'none';
+            profileImagePlaceholder.style.display = 'flex';
+        }
+    }
+    
+    // Update other profile fields
+    const firstNameElement = document.getElementById('profile-first-name');
+    const lastNameElement = document.getElementById('profile-last-name');
+    const phoneElement = document.getElementById('profile-phone');
+    
+    if (firstNameElement) firstNameElement.textContent = currentUser.profile?.first_name || '-';
+    if (lastNameElement) lastNameElement.textContent = currentUser.profile?.last_name || '-';
+    if (phoneElement) phoneElement.textContent = currentUser.profile?.phone || '-';
+    
+    // Update address fields
+    const streetElement = document.getElementById('profile-street');
+    const cityElement = document.getElementById('profile-city');
+    const provinceElement = document.getElementById('profile-province');
+    const barangayElement = document.getElementById('profile-barangay');
+    
+    if (streetElement) streetElement.textContent = currentUser.profile?.address?.street || '-';
+    if (cityElement) cityElement.textContent = currentUser.profile?.address?.city || '-';
+    if (provinceElement) provinceElement.textContent = currentUser.profile?.address?.province || '-';
+    if (barangayElement) barangayElement.textContent = currentUser.profile?.address?.barangay || '-';
+}
+
+// Success and error message for profile update
+function showProfileUpdateSuccess(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        <i class="bi bi-check-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 3000);
+}
+
+function showProfileUpdateError(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed';
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Force refresh current user data from server
+function refreshCurrentUserData() {
+    return fetch('php/check_session.php', {
+        method: 'POST',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.user) {
+            currentUser = data.user;
+            console.log('Current user data refreshed:', currentUser);
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {
+        console.error('Error refreshing user data:', error);
+        return false;
+    });
+}
+
+// General toast notification function
+function showToast(message, type = 'info') {
+    // Create toast container if it doesn't exist
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+        toastContainer.style.zIndex = '9999';
+        document.body.appendChild(toastContainer);
+    }
+    
+    // Create toast element
+    const toastId = 'toast-' + Date.now();
+    const toastElement = document.createElement('div');
+    toastElement.id = toastId;
+    toastElement.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} border-0`;
+    toastElement.setAttribute('role', 'alert');
+    toastElement.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    toastContainer.appendChild(toastElement);
+    
+    // Show toast
+    const toast = new bootstrap.Toast(toastElement, {
+        autohide: true,
+        delay: 5000
+    });
+    toast.show();
+    
+    // Remove toast element after it's hidden
+    toastElement.addEventListener('hidden.bs.toast', function() {
+        toastElement.remove();
+    });
 }

@@ -549,3 +549,118 @@ footer a:hover {
 .input-group .form-control:focus + .btn-outline-secondary {
     border-color: #B0323A;
 }
+
+/* Profile image container styles */
+.profile-image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-image-container #profile-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.profile-image-container #profile-image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.profile-image-container .profile-edit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+}
+
+.profile-image-container .profile-edit:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Smooth hover effects */
+.profile-image-container .profile-edit button {
+    transition: all 0.2s ease;
+}
+
+.profile-image-container .profile-edit button:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Faster loading animations */
+.spinner-border-sm {
+    animation-duration: 0.5s;
+}
+
+/* Cart checkbox styling */
+.cart-item .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.1em;
+    cursor: pointer;
+}
+
+.cart-item .form-check-input:checked {
+    background-color: #B0323A;
+    border-color: #B0323A;
+}
+
+.cart-item .form-check-input:focus {
+    border-color: #B0323A;
+    box-shadow: 0 0 0 0.2rem rgba(176, 50, 58, 0.25);
+}
+
+/* Select all checkbox styling */
+#select-all-checkbox {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.1em;
+    cursor: pointer;
+}
+
+#select-all-checkbox:checked {
+    background-color: #B0323A;
+    border-color: #B0323A;
+}
+
+#select-all-checkbox:focus {
+    border-color: #B0323A;
+    box-shadow: 0 0 0 0.2rem rgba(176, 50, 58, 0.25);
+}
+
+/* Cart item adjustments for checkbox layout */
+.cart-item .row {
+    align-items: center;
+}
+
+.cart-item .col-md-1 {
+    padding-right: 0.5rem;
+}
+
+/* Responsive adjustments for cart items */
+@media (max-width: 768px) {
+    .cart-item .col-md-1,
+    .cart-item .col-md-2,
+    .cart-item .col-md-3 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .cart-item .form-check {
+        margin-bottom: 0.5rem;
+    }
+}

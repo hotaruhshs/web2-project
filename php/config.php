@@ -2,9 +2,9 @@
 // Configuration file for UrbanThreadz
 
 // Database settings (JSON file-based)
-define('USERS_FILE', '../data/users.json');
-define('ORDERS_FILE', '../data/orders.json');
-define('PRODUCTS_FILE', '../data/products.xml');
+define('USERS_FILE', __DIR__ . '/../data/users.json');
+define('ORDERS_FILE', __DIR__ . '/../data/orders.json');
+define('PRODUCTS_FILE', __DIR__ . '/../data/products.xml');
 
 // Security settings
 define('SESSION_TIMEOUT', 3600); // 1 hour

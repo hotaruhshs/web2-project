@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test - UrbanThreadz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Debug Test Page</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Test Cart Items</h3>
+                <button class="btn btn-primary" onclick="testCartItems()">Add Test Items to Cart</button>
+                <button class="btn btn-secondary" onclick="showCartItems()">Show Cart Items</button>
+                <button class="btn btn-warning" onclick="clearCart()">Clear Cart</button>
+                <div id="cart-display" class="mt-3"></div>
+            </div>
+            
+            <div class="col-md-6">
+                <h3>Test Order Submission</h3>
+                <button class="btn btn-success" onclick="testOrderSubmission()">Test Order Submission</button>
+                <button class="btn btn-info" onclick="testPhpEndpoint()">Test PHP Endpoint</button>
+                <button class="btn btn-warning" onclick="testServerConnection()">Test Server Connection</button>
+                <button class="btn btn-secondary" onclick="testPhpServer()">Test PHP Server</button>
+                <div id="order-result" class="mt-3"></div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3>Console Log</h3>
+                <div id="console-log" class="border p-3 bg-light" style="height: 200px; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Override console.log to display in page
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const logDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div><span class="text-muted">[${timestamp}]</span> ${args.join(' ')}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+        
+        function testCartItems() {
+            const testItem = {
+                id: 1,
+                name: "Test Product",
+                price: 500,
+                quantity: 1,
+                image: "images/classic-graphic-tee.webp",
+                size: "M",
+                color: "Blue"
+            };
+            
+            let cart = getCartItems();
+            cart.push(testItem);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            console.log('Test item added to cart');
+        }
+        
+        function showCartItems() {
+            const cart = getCartItems();
+            const cartDisplay = document.getElementById('cart-display');
+            cartDisplay.innerHTML = `<pre>${JSON.stringify(cart, null, 2)}</pre>`;
+            console.log('Cart items:', cart);
+        }
+        
+        function clearCart() {
+            localStorage.removeItem('cart');
+            updateCartCount();
+            document.getElementById('cart-display').innerHTML = '';
+            console.log('Cart cleared');
+        }
+        
+        function testOrderSubmission() {
+            const testOrderData = {
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                phone: "09123456789",
+                address: "123 Test Street",
+                city: "Test City",
+                state: "Test State",
+                zipCode: "Test Barangay",
+                paymentMethod: "cash_on_delivery",
+                orderNotes: "Test order",
+                cartItems: getCartItems(),
+                subtotal: 500,
+                shipping: 150,
+                total: 650
+            };
+            
+            console.log('Testing order submission with data:', testOrderData);
+            
+            fetch('php/submit_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(testOrderData)
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.text();
+            })
+            .then(data => {
+                console.log('Raw response:', data);
+                try {
+                    const jsonData = JSON.parse(data);
+                    console.log('Parsed JSON response:', jsonData);
+                    document.getElementById('order-result').innerHTML = `<div class="alert alert-${jsonData.success ? 'success' : 'danger'}">Order Response: <pre>${JSON.stringify(jsonData, null, 2)}</pre></div>`;
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    document.getElementById('order-result').innerHTML = `<div class="alert alert-danger">JSON Parse Error: ${parseError.message}<br>Raw Response: <pre>${data}</pre></div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                document.getElementById('order-result').innerHTML = `<div class="alert alert-danger">Fetch Error: ${error.message}</div>`;
+            });
+        }
+        
+        function testPhpEndpoint() {
+            console.log('Testing PHP endpoint...');
+            
+            // Test with a simple GET request first
+            fetch('php/submit_order.php', {
+                method: 'GET'
+            })
+            .then(response => {
+                console.log('PHP endpoint GET response status:', response.status);
+                return response.text();
+            })
+            .then(data => {
+                console.log('PHP endpoint GET response:', data);
+                try {
+                    const jsonData = JSON.parse(data);
+                    document.getElementById('order-result').innerHTML = `<div class="alert alert-info">PHP GET Response: <pre>${JSON.stringify(jsonData, null, 2)}</pre></div>`;
+                } catch (e) {
+                    document.getElementById('order-result').innerHTML = `<div class="alert alert-danger">PHP GET Error (Not JSON): <pre>${data}</pre></div>`;
+                }
+            })
+            .catch(error => {
+                console.error('PHP endpoint GET error:', error);
+                document.getElementById('order-result').innerHTML = `<div class="alert alert-danger">PHP GET Error: ${error.message}</div>`;
+            });
+        }
+        
+        function testServerConnection() {
+            console.log('Testing server connection...');
+            
+            // Test basic server connection
+            fetch('index.html')
+            .then(response => {
+                console.log('Server connection test:', response.status);
+                if (response.ok) {
+                    document.getElementById('order-result').innerHTML = `<div class="alert alert-success">Server is running (Status: ${response.status})</div>`;
+                } else {
+                    document.getElementById('order-result').innerHTML = `<div class="alert alert-warning">Server response: ${response.status}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Server connection error:', error);
+                document.getElementById('order-result').innerHTML = `<div class="alert alert-danger">Server connection failed: ${error.message}</div>`;
+            });
+        }
+        
+        function testPhpServer() {
+            console.log('Testing PHP server...');
+            
+            fetch('php/test.php')
+            .then(response => {
+                console.log('PHP server test response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('PHP server test response:', data);
+                document.getElementById('order-result').innerHTML = `<div class="alert alert-success">PHP Server Test: <pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+            })
+            .catch(error => {
+                console.error('PHP server test error:', error);
+                document.getElementById('order-result').innerHTML = `<div class="alert alert-danger">PHP Server Test Error: ${error.message}</div>`;
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug page loaded');
+            showCartItems();
+        });
+    </script>
+</body>
+</html>

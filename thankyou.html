@@ -31,7 +31,7 @@
                         <span class="cart-count badge bg-danger rounded-pill ms-1" id="cartCount">0</span>
                     </a>
                 </div>
-                <div class="navbar-nav position-absolute" style="right: 0;">
+                <div class="navbar-nav position-absolute" style="right: 0;" id="auth-nav">
                     <a class="nav-link me-3" href="login.html">Login</a>
                     <a class="btn btn-primary signup-btn" href="register.html">Sign Up for Free</a>
                 </div>
@@ -48,12 +48,315 @@
             </div>
         </section>
         
-        <section class="container py-5 text-center">
-            <p class="mb-4">You will receive an email confirmation shortly with your order details.</p>
-            <a href="products.html" class="btn btn-primary btn-lg">Continue Shopping</a>
+        <section class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Order Confirmation</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-receipt me-2"></i>Order ID</h6>
+                                    <p class="text-muted mb-0 fw-bold" id="order-id">Loading...</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-calendar-event me-2"></i>Order Date</h6>
+                                    <p class="text-muted mb-0" id="order-date">Loading...</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-currency-dollar me-2"></i>Total Amount</h6>
+                                    <p class="text-muted mb-0 fw-bold fs-5 text-success" id="order-total">Loading...</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-credit-card me-2"></i>Payment Status</h6>
+                                    <p class="text-muted mb-0">
+                                        <span class="badge bg-warning">Pending</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>What's Next?</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>You will receive an email confirmation shortly with your order details</li>
+                                    <li>We'll notify you when your order is processed and shipped</li>
+                                    <li>You can view your complete order details in your profile</li>
+                                    <li>For any questions, contact us at support@urbanthreadz.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="products.html" class="btn btn-primary btn-lg me-3">
+                            <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                        </a>
+                        <a href="profile.html" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-person-circle me-2"></i>View Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
+    <script>
+        // Load order confirmation data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize navigation
+            initializeNavigation();
+            
+            // Load order details from localStorage
+            loadOrderConfirmation();
+            
+            // Clear the cart count since order is complete
+            updateCartCount();
+            
+            // Auto-clear order data after 5 minutes (prevent refresh issues)
+            setTimeout(() => {
+                localStorage.removeItem('lastOrder');
+            }, 300000);
+        });
+        
+        function loadOrderConfirmation() {
+            console.log('Loading order confirmation...');
+            // First try to get order ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+            console.log('Order ID from URL:', orderId);
+            
+            if (orderId) {
+                // Load order from server
+                console.log('Fetching order from server...');
+                fetch(`php/get_order.php?orderId=${orderId}`)
+                    .then(response => {
+                        console.log('Server response:', response);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Order data from server:', data);
+                        if (data.success && data.order) {
+                            displayOrderDetails(data.order);
+                        } else {
+                            console.error('Order not found:', data.error);
+                            // Try direct JSON file access as fallback
+                            loadOrderFromJSONFile(orderId);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading order:', error);
+                        // Try direct JSON file access as fallback
+                        loadOrderFromJSONFile(orderId);
+                    });
+            } else {
+                // No order ID in URL, try localStorage
+                console.log('No order ID in URL, trying localStorage...');
+                loadOrderFromLocalStorage();
+            }
+        }
+        
+        function loadOrderFromLocalStorage() {
+            console.log('Loading order from localStorage...');
+            const lastOrder = localStorage.getItem('lastOrder');
+            console.log('LastOrder from localStorage:', lastOrder);
+            
+            if (lastOrder) {
+                try {
+                    const orderData = JSON.parse(lastOrder);
+                    console.log('Parsed order data:', orderData);
+                    displayOrderDetails(orderData);
+                } catch (error) {
+                    console.error('Error parsing order data:', error);
+                    showOrderError();
+                }
+            } else {
+                // No order data found, redirect to products page
+                console.log('No order data found in localStorage');
+                showOrderError();
+            }
+        }
+        
+        function loadOrderFromJSONFile(orderId) {
+            console.log('Loading order from JSON file...');
+            fetch('data/orders.json')
+                .then(response => response.json())
+                .then(orders => {
+                    console.log('Orders loaded from JSON:', orders);
+                    // Find order by ID
+                    const order = orders.find(o => o.orderId === orderId);
+                    if (order) {
+                        console.log('Found order:', order);
+                        displayOrderDetails(order);
+                    } else {
+                        console.log('Order not found in JSON file');
+                        loadOrderFromLocalStorage();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading from JSON file:', error);
+                    loadOrderFromLocalStorage();
+                });
+        }
+        
+        function displayOrderDetails(orderData) {
+            console.log('displayOrderDetails called with:', orderData);
+            // Update order ID
+            const orderIdElement = document.getElementById('order-id');
+            if (orderIdElement) {
+                orderIdElement.textContent = orderData.orderId || 'N/A';
+            }
+            
+            // Update order date
+            const orderDateElement = document.getElementById('order-date');
+            if (orderDateElement) {
+                const orderDate = new Date(orderData.orderDate);
+                orderDateElement.textContent = orderDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // Update total amount
+            const orderTotalElement = document.getElementById('order-total');
+            if (orderTotalElement) {
+                const totalAmount = orderData.totals ? orderData.totals.total : orderData.total;
+                orderTotalElement.textContent = `₱${totalAmount.toFixed(2)}`;
+            }
+            
+            // Add success animation
+            const successIcon = document.querySelector('.bi-check-circle-fill');
+            if (successIcon) {
+                successIcon.style.animation = 'pulse 2s ease-in-out';
+            }
+            
+            // Update page title with order ID
+            document.title = `Order Confirmation #${orderData.orderId} - UrbanThreadz`;
+            
+            // Show success toast
+            showToast('Order placed successfully!', 'success');
+        }
+        
+        function showOrderError() {
+            // Update elements to show error state
+            const orderIdElement = document.getElementById('order-id');
+            const orderDateElement = document.getElementById('order-date');
+            const orderTotalElement = document.getElementById('order-total');
+            
+            if (orderIdElement) orderIdElement.textContent = 'Order not found';
+            if (orderDateElement) orderDateElement.textContent = 'N/A';
+            if (orderTotalElement) orderTotalElement.textContent = '₱0.00';
+            
+            // Show error message
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection) {
+                heroSection.innerHTML = `
+                    <div class="container text-center">
+                        <h2 class="display-5 fw-bold mb-3 text-warning">Order Not Found</h2>
+                        <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 4rem;"></i>
+                        <p class="lead text-muted mt-3">We couldn't find your order details. Please check your email for confirmation or contact support.</p>
+                        <div class="mt-4">
+                            <a href="products.html" class="btn btn-primary btn-lg me-3">
+                                <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                            </a>
+                            <a href="cart.html" class="btn btn-outline-primary btn-lg">
+                                <i class="bi bi-cart me-2"></i>View Cart
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Show error toast
+            showToast('Order details could not be loaded. Please check your email for confirmation.', 'error');
+        }
+        
+        // Toast notification function (if not already included)
+        function showToast(message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '9999';
+                document.body.appendChild(toastContainer);
+            }
+            
+            // Create toast element
+            const toastId = 'toast-' + Date.now();
+            const toastElement = document.createElement('div');
+            toastElement.id = toastId;
+            toastElement.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} border-0`;
+            toastElement.setAttribute('role', 'alert');
+            toastElement.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toastElement);
+            
+            // Show toast
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 5000
+            });
+            toast.show();
+            
+            // Remove toast element after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+    </script>
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .toast-container {
+            z-index: 9999;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .text-success {
+            color: #28a745 !important;
+        }
+        
+        .text-warning {
+            color: #ffc107 !important;
+        }
+    </style>
 </body>
 </html>

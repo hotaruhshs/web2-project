@@ -8,9 +8,9 @@
 | 4       | Implement user registration (`register.html`, backend) | Completed  | 2025-07-15   | 2025-07-15     |
 | 5       | Implement user login (`login.html`, backend) | Completed  | 2025-07-15   | 2025-07-15     |
 | 6       | Develop user profile page (`profile.html`) | Completed  | 2025-07-15   | 2025-07-15     |
-| 7       | Build cart functionality (`cart.html`, JS) | In Progress| 2025-07-15   |                |
-| 8       | Implement checkout process (`checkout.html`, AJAX, backend) | Pending    |              |                |
-| 9       | Create order confirmation page (`thankyou.html`) | Pending    |              |                |
+| 7       | Build cart functionality (`cart.html`, JS) | Completed  | 2025-07-15   | 2025-07-15     |
+| 8       | Implement checkout process (`checkout.html`, AJAX, backend) | Completed  | 2025-07-15   | 2025-07-15     |
+| 9       | Create order confirmation page (`thankyou.html`) | Completed  | 2025-07-15   | 2025-07-16     |
 | 10      | Set up admin login (`admin/admin-login.html`) | Pending    |              |                |
 | 11      | Build admin dashboard (`admin/admin-dashboard.html`) | Pending    |              |                |
 | 12      | Implement order management (`admin/admin-orders.php`) | Pending    |              |                |

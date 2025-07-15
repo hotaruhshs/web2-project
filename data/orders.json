@@ -2,7 +2,223 @@
     {
         "orderId": 1,
         "userId": 1,
-        "products": [1],
+        "products": [
+            1
+        ],
         "total": 19.99
+    },
+    {
+        "orderId": "1752594344_8396",
+        "userId": 1,
+        "orderDate": "2025-07-15 17:45:44",
+        "status": "pending",
+        "customer": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "phone": "09123456789"
+        },
+        "shipping": {
+            "address": "123 Test Street",
+            "city": "Test City",
+            "state": "Test State",
+            "zipCode": "Test Barangay"
+        },
+        "items": [
+            {
+                "id": 1,
+                "name": "Test Product",
+                "price": 500,
+                "quantity": 1,
+                "image": "images\/classic-graphic-tee.webp",
+                "size": "M",
+                "color": "Blue"
+            }
+        ],
+        "payment": {
+            "method": "cash_on_delivery",
+            "status": "pending"
+        },
+        "totals": {
+            "subtotal": 500,
+            "shipping": 150,
+            "total": 650
+        },
+        "notes": "Test order"
+    },
+    {
+        "orderId": "1752594504_1183",
+        "userId": 1,
+        "orderDate": "2025-07-15 17:48:24",
+        "status": "pending",
+        "customer": {
+            "firstName": "Test",
+            "lastName": "One",
+            "email": "test1@gmail.com",
+            "phone": "1111"
+        },
+        "shipping": {
+            "address": "Purok",
+            "city": "Bulacan",
+            "state": "sadas",
+            "zipCode": "dasda"
+        },
+        "items": [
+            {
+                "id": "1",
+                "name": "Classic Graphic Tee",
+                "price": 1399,
+                "image": "images\/classic-graphic-tee.webp",
+                "size": "S",
+                "color": "White",
+                "quantity": 2,
+                "uniqueId": "1-S-White",
+                "selected": true
+            },
+            {
+                "id": "7",
+                "name": "Work Jacket",
+                "price": 5099,
+                "image": "images\/work-jacket.webp",
+                "size": "M",
+                "color": "Khaki",
+                "quantity": 1,
+                "uniqueId": "7-M-Khaki",
+                "selected": true
+            }
+        ],
+        "payment": {
+            "method": "cash_on_delivery",
+            "status": "pending"
+        },
+        "totals": {
+            "subtotal": 7897,
+            "shipping": 0,
+            "total": 7897
+        },
+        "notes": ""
+    },
+    {
+        "orderId": "1752594573_2804",
+        "userId": 1,
+        "orderDate": "2025-07-15 17:49:33",
+        "status": "pending",
+        "customer": {
+            "firstName": "Test",
+            "lastName": "One",
+            "email": "test1@gmail.com",
+            "phone": "1111"
+        },
+        "shipping": {
+            "address": "Purok",
+            "city": "Bulacan",
+            "state": "sadas",
+            "zipCode": "dasda"
+        },
+        "items": [
+            {
+                "id": "2",
+                "name": "Classic Raglan Tee",
+                "price": 1299,
+                "image": "images\/classic-raglan-tee.webp",
+                "size": "S",
+                "color": "Navy",
+                "quantity": 1,
+                "uniqueId": "2-S-Navy",
+                "selected": true
+            }
+        ],
+        "payment": {
+            "method": "cash_on_delivery",
+            "status": "pending"
+        },
+        "totals": {
+            "subtotal": 1299,
+            "shipping": 150,
+            "total": 1449
+        },
+        "notes": ""
+    },
+    {
+        "orderId": "1752594857_7967",
+        "userId": 1,
+        "orderDate": "2025-07-15 17:54:17",
+        "status": "pending",
+        "customer": {
+            "firstName": "Test",
+            "lastName": "One",
+            "email": "test1@gmail.com",
+            "phone": "1111"
+        },
+        "shipping": {
+            "address": "Purok",
+            "city": "Bulacan",
+            "state": "sadas",
+            "zipCode": "dasda"
+        },
+        "items": [
+            {
+                "id": "13",
+                "name": "Avenger Sunglasses",
+                "price": 799,
+                "image": "images\/avenger-sunglasses.webp",
+                "size": "One Size",
+                "color": "Black",
+                "quantity": 1,
+                "uniqueId": "13-One Size-Black",
+                "selected": true
+            }
+        ],
+        "payment": {
+            "method": "cash_on_delivery",
+            "status": "pending"
+        },
+        "totals": {
+            "subtotal": 799,
+            "shipping": 150,
+            "total": 949
+        },
+        "notes": ""
+    },
+    {
+        "orderId": "1752596271_6670",
+        "userId": 1,
+        "orderDate": "2025-07-15 18:17:51",
+        "status": "pending",
+        "customer": {
+            "firstName": "Test",
+            "lastName": "One",
+            "email": "test1@gmail.com",
+            "phone": "1111"
+        },
+        "shipping": {
+            "address": "Purok",
+            "city": "Bulacan",
+            "state": "sadas",
+            "zipCode": "dasda"
+        },
+        "items": [
+            {
+                "id": "6",
+                "name": "Slanted Pullover Hooded Sweatshirt",
+                "price": 3699,
+                "image": "images\/slanted-pullover-hooded-sweatshirt.webp",
+                "size": "M",
+                "color": "Black",
+                "quantity": 1,
+                "uniqueId": "6-M-Black",
+                "selected": true
+            }
+        ],
+        "payment": {
+            "method": "credit_card",
+            "status": "pending"
+        },
+        "totals": {
+            "subtotal": 3699,
+            "shipping": 0,
+            "total": 3699
+        },
+        "notes": ""
     }
 ]
