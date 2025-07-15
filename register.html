@@ -33,50 +33,385 @@
                 </div>
                 <div class="navbar-nav position-absolute" style="right: 0;">
                     <a class="nav-link me-3" href="login.html">Login</a>
-                    <a class="btn btn-primary signup-btn" href="register.html">Sign Up for Free</a>
+                    <a class="btn btn-primary signup-btn active" href="register.html">Sign Up for Free</a>
                 </div>
             </div>
         </div>
     </nav>
     <main>
         <!-- Page Header -->
-        <section class="hero-section bg-light py-4">
-            <div class="container">
-                <h2 class="display-6 fw-bold mb-2">Create Your Account</h2>
-                <p class="lead text-muted mb-0">Join UrbanThreadz and start shopping!</p>
+        <section class="hero-section py-4">
+            <div class="container text-center">
+                <h2 class="display-6 fw-bold mb-3">Join UrbanThreadz</h2>
+                <p class="lead text-muted mb-0">Create your account and discover your style</p>
             </div>
         </section>
         
-        <section class="container py-5">
+        <!-- Registration Form Section -->
+        <section class="container py-4">
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4">
-                    <div class="card shadow">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow border-0 registration-form">
+                        <div class="card-header bg-white text-center py-3 border-bottom">
+                            <h4 class="mb-1">Create Your Account</h4>
+                            <p class="text-muted mb-0 small">Join thousands of satisfied customers</p>
+                        </div>
                         <div class="card-body p-4">
                             <form id="register-form" action="php/register.php" method="POST">
                                 <div class="mb-3">
-                                    <label for="username" class="form-label">Username:</label>
-                                    <input type="text" class="form-control" id="username" name="username" required>
+                                    <label for="username" class="form-label fw-semibold">
+                                        <i class="bi bi-person-circle me-2 text-primary"></i>Username
+                                    </label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Email:</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <label for="email" class="form-label fw-semibold">
+                                        <i class="bi bi-envelope me-2 text-primary"></i>Email Address
+                                    </label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="password" class="form-label">Password:</label>
-                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <label for="password" class="form-label fw-semibold">
+                                        <i class="bi bi-lock me-2 text-primary"></i>Password
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                                        <button type="button" class="btn btn-outline-secondary" id="togglePassword" aria-label="Toggle password visibility">
+                                            <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text small mt-1" id="passwordHelp">
+                                        <i class="bi bi-info-circle me-1"></i>Password must be at least 8 characters long
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">Register</button>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label fw-semibold">
+                                        <i class="bi bi-lock-fill me-2 text-primary"></i>Confirm Password
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                                        <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword" aria-label="Toggle confirm password visibility">
+                                            <i class="bi bi-eye" id="toggleConfirmPasswordIcon"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text small mt-1" id="confirmPasswordHelp">
+                                        <i class="bi bi-info-circle me-1"></i>Passwords must match
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                        <label class="form-check-label small" for="terms">
+                                            I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 mb-3">
+                                    <i class="bi bi-person-plus me-2"></i>Create Account
+                                </button>
+                                <div class="text-center">
+                                    <p class="text-muted mb-0 small">Already have an account? <a href="login.html" class="text-primary fw-semibold">Sign in here</a></p>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section py-4 bg-light compact-form">
+            <div class="container">
+                <h3 class="text-center mb-4">Why Join UrbanThreadz?</h3>
+                <div class="row g-3">
+                    <div class="col-md-4 text-center">
+                        <div class="benefit-item">
+                            <div class="benefit-icon mb-2">
+                                <i class="bi bi-truck display-6 text-primary"></i>
+                            </div>
+                            <h6 class="mb-2">Free Shipping</h6>
+                            <p class="text-muted small">Free shipping on all orders over $50</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="benefit-item">
+                            <div class="benefit-icon mb-2">
+                                <i class="bi bi-star display-6 text-primary"></i>
+                            </div>
+                            <h6 class="mb-2">Quality Products</h6>
+                            <p class="text-muted small">Curated selection of premium clothing</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="benefit-item">
+                            <div class="benefit-icon mb-2">
+                                <i class="bi bi-arrow-clockwise display-6 text-primary"></i>
+                            </div>
+                            <h6 class="mb-2">Easy Returns</h6>
+                            <p class="text-muted small">30-day hassle-free return policy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
-    <footer class="container py-4 text-center">
-        <a href="login.html" class="btn btn-outline-primary">Already have an account? Login</a>
+    <footer class="text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>UrbanThreadz</h5>
+                    <p>Your go-to destination for trendy and affordable fashion.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white-50">Home</a></li>
+                        <li><a href="products.html" class="text-white-50">Products</a></li>
+                        <li><a href="login.html" class="text-white-50">Login</a></li>
+                        <li><a href="register.html" class="text-white-50">Register</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Follow Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white-50 me-3"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-white-50 me-3"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="#" class="text-white-50 me-3"><i class="bi bi-twitter fs-4"></i></a>
+                        <a href="#" class="text-white-50"><i class="bi bi-youtube fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 UrbanThreadz. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password toggle functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+            
+            if (togglePassword && passwordInput && togglePasswordIcon) {
+                togglePassword.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        togglePasswordIcon.classList.remove('bi-eye');
+                        togglePasswordIcon.classList.add('bi-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        togglePasswordIcon.classList.remove('bi-eye-slash');
+                        togglePasswordIcon.classList.add('bi-eye');
+                    }
+                });
+            }
+
+            // Confirm password toggle functionality
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPasswordIcon');
+            
+            if (toggleConfirmPassword && confirmPasswordInput && toggleConfirmPasswordIcon) {
+                toggleConfirmPassword.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (confirmPasswordInput.type === 'password') {
+                        confirmPasswordInput.type = 'text';
+                        toggleConfirmPasswordIcon.classList.remove('bi-eye');
+                        toggleConfirmPasswordIcon.classList.add('bi-eye-slash');
+                    } else {
+                        confirmPasswordInput.type = 'password';
+                        toggleConfirmPasswordIcon.classList.remove('bi-eye-slash');
+                        toggleConfirmPasswordIcon.classList.add('bi-eye');
+                    }
+                });
+            }
+        });
+
+        // Real-time password validation
+        const passwordField = document.getElementById('password');
+        if (passwordField) {
+            passwordField.addEventListener('input', function() {
+                const password = this.value;
+                const helpText = document.getElementById('passwordHelp');
+                
+                if (!helpText) return;
+                
+                if (password.length === 0) {
+                    helpText.className = 'form-text small mt-1';
+                    helpText.innerHTML = '<i class="bi bi-info-circle me-1"></i>Password must be at least 8 characters long';
+                } else if (password.length < 8) {
+                    helpText.className = 'form-text small mt-1 text-danger';
+                    helpText.innerHTML = '<i class="bi bi-x-circle me-1"></i>Password must be at least 8 characters long';
+                } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                    helpText.className = 'form-text small mt-1 text-warning';
+                    helpText.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Include uppercase, lowercase, and number for stronger security';
+                } else {
+                    helpText.className = 'form-text small mt-1 text-success';
+                    helpText.innerHTML = '<i class="bi bi-check-circle me-1"></i>Password looks good!';
+                }
+                
+                // Also validate confirm password if it has a value
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (confirmPassword) {
+                    validatePasswordMatch();
+                }
+            });
+        }
+
+        // Function to validate password match
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const helpText = document.getElementById('confirmPasswordHelp');
+            
+            if (!helpText) return;
+            
+            if (confirmPassword === '') {
+                helpText.className = 'form-text small mt-1';
+                helpText.innerHTML = '<i class="bi bi-info-circle me-1"></i>Passwords must match';
+            } else if (password !== confirmPassword) {
+                helpText.className = 'form-text small mt-1 text-danger';
+                helpText.innerHTML = '<i class="bi bi-x-circle me-1"></i>Passwords do not match';
+            } else {
+                helpText.className = 'form-text small mt-1 text-success';
+                helpText.innerHTML = '<i class="bi bi-check-circle me-1"></i>Passwords match!';
+            }
+        }
+
+        // Real-time password match validation
+        const confirmPasswordField = document.getElementById('confirmPassword');
+        if (confirmPasswordField) {
+            confirmPasswordField.addEventListener('input', validatePasswordMatch);
+        }
+
+        // Form submission handling
+        const registerForm = document.getElementById('register-form');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate password requirements before submission
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (password.length < 8) {
+                    showAlert('Password must be at least 8 characters long.', 'danger');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showAlert('Passwords do not match.', 'danger');
+                    return;
+                }
+                
+                const formData = new FormData(this);
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                
+                // Show loading state
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Creating Account...';
+                submitBtn.disabled = true;
+                
+                // Clear previous alerts
+                const existingAlert = document.querySelector('.alert');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+                      fetch('php/register.php', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    // If not JSON, get text to see what's actually returned
+                    return response.text().then(text => {
+                        console.log('Non-JSON response:', text);
+                        throw new Error('Server returned non-JSON response: ' + text);
+                    });
+                }
+            })
+            .then(data => {
+                console.log('Registration response:', data);
+                if (data.success) {
+                    // Success - show success message and redirect
+                    showAlert(data.message, 'success');
+                    
+                    // Reset form
+                    this.reset();
+                    
+                    // Reset validation messages
+                    const passwordHelp = document.getElementById('passwordHelp');
+                    const confirmPasswordHelp = document.getElementById('confirmPasswordHelp');
+                    
+                    if (passwordHelp) {
+                        passwordHelp.className = 'form-text small mt-1';
+                        passwordHelp.innerHTML = '<i class="bi bi-info-circle me-1"></i>Password must be at least 8 characters long';
+                    }
+                    
+                    if (confirmPasswordHelp) {
+                        confirmPasswordHelp.className = 'form-text small mt-1';
+                        confirmPasswordHelp.innerHTML = '<i class="bi bi-info-circle me-1"></i>Passwords must match';
+                    }
+                    
+                    // Redirect to login page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    // Error - show error message
+                    showAlert(data.message || 'Registration failed', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Registration error:', error);
+                showAlert('An error occurred: ' + error.message, 'danger');
+            })
+                .finally(() => {
+                    // Reset button state
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                });
+            });
+        }
+
+        // Helper function to show alerts
+        function showAlert(message, type) {
+            const form = document.getElementById('register-form');
+            const existingAlert = document.querySelector('.alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            const iconClass = type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle';
+            alert.innerHTML = `
+                <i class="bi ${iconClass} me-2"></i>${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            form.insertBefore(alert, form.firstChild);
+            
+            // Scroll to alert
+            alert.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        }); // End of DOMContentLoaded
+    </script>
 </body>
 </html>

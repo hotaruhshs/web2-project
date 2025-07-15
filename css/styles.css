@@ -71,6 +71,17 @@ h1, h2, .display-5 {
     box-shadow: 0 4px 12px rgba(176, 50, 58, 0.3);
 }
 
+/* Active signup button styling */
+.signup-btn.active {
+    background-color: #2B3537 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(43, 53, 55, 0.3);
+}
+
+.signup-btn.active:hover {
+    background-color: #1a2021 !important;
+}
+
 /* Cart icon styling */
 .cart-icon {
     position: relative;
@@ -333,47 +344,208 @@ footer a:hover {
     color: #B0323A !important;
 }
 
-/* Responsive Design Enhancements */
-@media (max-width: 768px) {
-    .filters-section .row {
-        text-align: center;
-    }
-    
-    .filters-section .col-md-4,
-    .filters-section .col-md-3,
-    .filters-section .col-md-2 {
-        margin-bottom: 0.5rem;
-    }
-    
-    .product-card .card-body {
-        text-align: center;
-    }
-    
-    .hero-section .col-md-4 {
-        text-align: center !important;
-        margin-top: 1rem;
-    }
+/* Registration page specific styles */
+.benefits-section {
+    background: #F9F3EF !important;
 }
 
-/* Animation for product cards loading */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.benefit-item {
+    padding: 30px 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    height: 100%;
 }
 
-.product-card {
-    animation: fadeInUp 0.6s ease-out;
+.benefit-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-.product-card:nth-child(1) { animation-delay: 0.1s; }
-.product-card:nth-child(2) { animation-delay: 0.2s; }
-.product-card:nth-child(3) { animation-delay: 0.3s; }
-.product-card:nth-child(4) { animation-delay: 0.4s; }
-.product-card:nth-child(5) { animation-delay: 0.5s; }
-.product-card:nth-child(6) { animation-delay: 0.6s; }
+.benefit-icon i {
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover .benefit-icon i {
+    transform: scale(1.1);
+    color: #B0323A !important;
+}
+
+/* Enhanced form styling */
+.form-control-lg {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.form-control-lg:focus {
+    border-color: #B0323A;
+    box-shadow: 0 0 0 0.2rem rgba(176, 50, 58, 0.25);
+}
+
+.form-label {
+    margin-bottom: 8px;
+    color: #2B3537;
+}
+
+.form-check-input:checked {
+    background-color: #B0323A;
+    border-color: #B0323A;
+}
+
+.form-check-input:focus {
+    border-color: #B0323A;
+    box-shadow: 0 0 0 0.25rem rgba(176, 50, 58, 0.25);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #F9F3EF 0%, #ffffff 100%) !important;
+}
+
+/* Authentication pages common styles */
+.auth-form-container {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.auth-form-container .card {
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.auth-form-container .card-header {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.auth-form-container .btn-primary {
+    padding: 12px 30px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.auth-form-container .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(176, 50, 58, 0.3);
+}
+
+/* Link styling in forms */
+.auth-form-container a {
+    color: #B0323A !important;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.auth-form-container a:hover {
+    color: #2B3537 !important;
+    text-decoration: underline;
+}
+
+/* Form validation styles */
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+}
+
+/* Form validation feedback styles */
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+.invalid-feedback.show {
+    display: block;
+}
+
+.valid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #28a745;
+}
+
+.valid-feedback.show {
+    display: block;
+}
+
+/* Loading state for submit button */
+.btn-primary:disabled {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Smooth transitions for form elements */
+.form-control {
+    transition: all 0.3s ease;
+}
+
+.form-check-input {
+    transition: all 0.3s ease;
+}
+
+/* Terms checkbox styling */
+.form-check {
+    padding-left: 1.5rem;
+}
+
+.form-check-input {
+    margin-top: 0.25rem;
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Password toggle button styling */
+.input-group .btn-outline-secondary {
+    border-left: none;
+    border-color: #ced4da;
+    color: #6c757d;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+    color: #495057;
+}
+
+.input-group .btn-outline-secondary:focus {
+    box-shadow: none;
+    border-color: #B0323A;
+    color: #B0323A;
+}
+
+.input-group .btn-outline-secondary:active {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #495057;
+}
+
+/* Ensure input and button heights match */
+.input-group .form-control {
+    border-right: none;
+}
+
+.input-group .form-control:focus {
+    border-right: none;
+    box-shadow: none;
+}
+
+.input-group .form-control:focus + .btn-outline-secondary {
+    border-color: #B0323A;
+}

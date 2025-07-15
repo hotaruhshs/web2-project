@@ -1,7 +1,22 @@
 [
     {
         "id": 1,
-        "username": "testuser",
-        "email": "test@example.com"
+        "username": "test1",
+        "email": "test1@gmail.com",
+        "password": "$2y$12$PmTsckxDV\/68HWImf83I2O7EVtt72ZwviGTBQtidjuvbzIPtt9oxC",
+        "created_at": "2025-07-14 16:30:08",
+        "status": "active",
+        "profile": {
+            "first_name": "",
+            "last_name": "",
+            "phone": "",
+            "address": {
+                "street": "",
+                "city": "",
+                "state": "",
+                "zip": "",
+                "country": ""
+            }
+        }
     }
 ]

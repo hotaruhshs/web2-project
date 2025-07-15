@@ -1,0 +1,90 @@
+[2025-07-14 16:30:36] User logged in: test1
+[2025-07-14 16:49:50] User logged in: test1
+[2025-07-14 16:50:11] User logged in: test1
+[2025-07-14 17:01:19] User logged in: test1
+[2025-07-14 17:05:25] DEBUG - Session check: {"session_id":"c51216190fa7ed45ff828f2e0b815f67","session_data":[],"cookies":[],"headers":{"Host":"localhost:8000","Connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","User-Agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Code\/1.102.0 Chrome\/134.0.6998.205 Electron\/35.6.0 Safari\/537.36","sec-ch-ua":"\"Not:A-Brand\";v=\"24\", \"Chromium\";v=\"134\"","sec-ch-ua-mobile":"?0","Accept":"*\/*","Sec-Fetch-Site":"same-origin","Sec-Fetch-Mode":"cors","Sec-Fetch-Dest":"empty","Sec-Fetch-Storage-Access":"active","Referer":"http:\/\/localhost:8000\/login.html?id=21976cb6-4c16-4556-b8a1-95a0ac7b8877&vscodeBrowserReqId=1752512724183","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US"}}
+[2025-07-14 17:05:25] DEBUG - isUserLoggedIn: false, Session: []
+[2025-07-15 03:47:14] User logged in: test1
+[2025-07-15 03:57:45] Session check - Session ID: 4636015f43729c5a353cbf1cdea776a1, Data: []
+[2025-07-15 03:58:07] Session check - Session ID: 412ea8bcce9f700774260e3059e4493d, Data: []
+[2025-07-15 03:58:21] Session created - ID: b1862427035ea1fcdc5c52cc9d1f08cb, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 03:58:21] Login - Session ID: b1862427035ea1fcdc5c52cc9d1f08cb, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 03:58:21] User logged in: test1
+[2025-07-15 03:58:21] Session check - Session ID: 4c8006765b73e4c274e1de8579d6b8a4, Data: []
+[2025-07-15 03:58:23] Session check - Session ID: 692db4bf9e4d7624b1a60678309ca2ba, Data: []
+[2025-07-15 04:01:11] Session check - Session ID: 3e0bb5d0bb782993c657ca1a0c9ff08d, Data: []
+[2025-07-15 04:04:06] Session check - Session ID: 7b5d1204ef72d8a38aae83d470d2c69e, Data: [], Cookies: []
+[2025-07-15 04:04:07] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:04:26] Session created - ID: 9365cb594c6846175e8b1780c092ba02, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:04:26] Login - Session ID: 9365cb594c6846175e8b1780c092ba02, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:04:26] User logged in: test1
+[2025-07-15 04:04:27] Session created - ID: ec0e7a32b1f570c25a33d3c0b49e204c, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:04:27] Login - Session ID: ec0e7a32b1f570c25a33d3c0b49e204c, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:04:27] User logged in: test1
+[2025-07-15 04:04:27] Session check - Session ID: f2010c3c5544ee188ca13d8b02bfdfa9, Data: [], Cookies: []
+[2025-07-15 04:04:28] Session check - Session ID: c967cbc271d2f50ed8f2e93a6f760d65, Data: [], Cookies: []
+[2025-07-15 04:04:33] Session check - Session ID: 7abbd4b1f38673a097c578166addb71f, Data: [], Cookies: []
+[2025-07-15 04:04:38] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:04:45] User logged out: test1
+[2025-07-15 04:04:46] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: [], Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:04:49] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: [], Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:05:00] Session created - ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:05:00] Login - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:05:00] User logged in: test1
+[2025-07-15 04:05:01] Session created - ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:05:01] Login - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:05:01] User logged in: test1
+[2025-07-15 04:05:01] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:05:01] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:05:03] Session check - Session ID: 2f9d2b33eb0d0f55da0fbe02cb78282b, Data: [], Cookies: []
+[2025-07-15 04:05:31] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:05:58] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:06:02] User logged out: test1
+[2025-07-15 04:06:03] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: [], Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:06:06] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: [], Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:06:23] Session created - ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:06:23] Login - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:06:23] User logged in: test1
+[2025-07-15 04:06:24] Session created - ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:06:24] Login - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}
+[2025-07-15 04:06:24] User logged in: test1
+[2025-07-15 04:06:24] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:06:24] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:06:54] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 04:07:24] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:20:05] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:21:03] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:21:24] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:21:54] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:22:24] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:23:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:24:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:25:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:26:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:27:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:28:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:29:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:30:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:31:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:32:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:33:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:34:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:35:18] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:35:20] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:35:50] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:36:20] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:36:50] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:37:20] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:37:50] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:38:20] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:39:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:40:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:41:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:42:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:43:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:44:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:45:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:46:17] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:46:20] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:46:50] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}
+[2025-07-15 05:47:45] Session check - Session ID: 410ab5634b7cfed88d39e03a3344ff81, Data: {"user_id":1,"username":"test1","email":"test1@gmail.com","logged_in":true}, Cookies: {"PHPSESSID":"410ab5634b7cfed88d39e03a3344ff81"}

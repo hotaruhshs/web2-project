@@ -3,6 +3,8 @@
 // Global variables
 let allProducts = [];
 let filteredProducts = [];
+let currentUser = null;
+let isLoggedIn = false;
 
 // Utility function to format numbers with comma separators
 function formatPriceWithCommas(price) {
@@ -547,8 +549,203 @@ function highlightActiveNavigation() {
     }
 }
 
+// Authentication state management
+function checkAuthenticationState() {
+    console.log('Checking authentication state...');
+    fetch('php/check_session.php', {
+        method: 'GET',
+        credentials: 'include'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Authentication response:', data);
+            if (data.success) {
+                currentUser = data.data;
+                isLoggedIn = true;
+                updateNavigationForLoggedInUser();
+                checkLoginRedirect();
+                displayProfile();
+            } else {
+                currentUser = null;
+                isLoggedIn = false;
+                updateNavigationForLoggedOutUser();
+                displayProfile();
+            }
+        })
+        .catch(error => {
+            console.error('Error checking authentication state:', error);
+            currentUser = null;
+            isLoggedIn = false;
+            updateNavigationForLoggedOutUser();
+            displayProfile();
+        });
+}
+
+// Session refresh function
+function refreshSession() {
+    console.log('Refreshing session...');
+    checkAuthenticationState();
+}
+
+// Check authentication state every 30 seconds
+setInterval(refreshSession, 30000);
+
+// Update navigation for logged in user
+function updateNavigationForLoggedInUser() {
+    const authSection = document.querySelector('.navbar-nav.position-absolute');
+    if (authSection) {
+        // Get current page to determine if profile should be highlighted
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const isProfilePage = currentPage === 'profile.html';
+        
+        authSection.innerHTML = `
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center ${isProfilePage ? 'active' : ''}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle me-2"></i>${currentUser.username}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" onclick="logoutUser()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        `;
+    }
+}
+
+// Update navigation for logged out user
+function updateNavigationForLoggedOutUser() {
+    const authSection = document.querySelector('.navbar-nav.position-absolute');
+    if (authSection) {
+        authSection.innerHTML = `
+            <a class="nav-link me-3" href="login.html">Login</a>
+            <a class="btn btn-primary signup-btn" href="register.html">Sign Up for Free</a>
+        `;
+    }
+}
+
+// Logout function
+function logoutUser() {
+    fetch('php/logout.php', {
+        method: 'POST',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentUser = null;
+            isLoggedIn = false;
+            updateNavigationForLoggedOutUser();
+            
+            // Show success message
+            showLogoutMessage('Logged out successfully!');
+            
+            // Redirect to homepage after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } else {
+            console.error('Logout failed:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error during logout:', error);
+    });
+}
+
+// Show logout message
+function showLogoutMessage(message) {
+    // Remove existing messages
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    // Create success alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        <i class="bi bi-check-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 3000);
+}
+
+// Check if user is already logged in and redirect accordingly
+function checkLoginRedirect() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Only redirect if we're on login or register pages and user is logged in
+    if (isLoggedIn && (currentPage === 'login.html' || currentPage === 'register.html')) {
+        window.location.href = 'profile.html';
+    }
+}
+
+// Profile page functionality
+function displayProfile() {
+    const profileLoading = document.getElementById('profile-loading');
+    const profileContent = document.getElementById('profile-content');
+    const notLoggedIn = document.getElementById('not-logged-in');
+    
+    // Debug: Check if we're on the profile page
+    console.log('displayProfile called - Elements found:', {
+        profileLoading: !!profileLoading,
+        profileContent: !!profileContent,
+        notLoggedIn: !!notLoggedIn,
+        isLoggedIn: isLoggedIn,
+        currentUser: currentUser
+    });
+    
+    if (!profileLoading || !profileContent || !notLoggedIn) {
+        console.log('Not on profile page or elements not found');
+        return; // Not on profile page
+    }
+    
+    if (isLoggedIn && currentUser) {
+        console.log('User is logged in, displaying profile');
+        // Display user information
+        document.getElementById('profile-username').textContent = currentUser.username;
+        document.getElementById('profile-email').textContent = currentUser.email;
+        document.getElementById('profile-id').textContent = currentUser.id;
+        document.getElementById('profile-created').textContent = formatDate(currentUser.created_at);
+        document.getElementById('profile-status').textContent = currentUser.status ? (currentUser.status.charAt(0).toUpperCase() + currentUser.status.slice(1)) : 'Active';
+        
+        // Show profile content
+        profileLoading.classList.add('d-none');
+        profileContent.classList.remove('d-none');
+        notLoggedIn.classList.add('d-none');
+    } else {
+        console.log('User is not logged in, showing login prompt');
+        // Show not logged in message
+        profileLoading.classList.add('d-none');
+        profileContent.classList.add('d-none');
+        notLoggedIn.classList.remove('d-none');
+    }
+}
+
+// Format date for display
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication state on all pages
+    checkAuthenticationState();
+    
     // Only run products-specific code if we're on the products page
     if (document.getElementById('loadingIndicator')) {
         // Load products from XML
@@ -575,3 +772,421 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     highlightActiveNavigation();
 });
+
+// Enhanced registration form functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.getElementById('register-form');
+    
+    if (registerForm) {
+        // Initialize password toggle functionality
+        initPasswordToggle();
+        
+        // Add form validation
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            
+            // Clear previous validation states
+            clearValidationStates();
+            
+            let isValid = true;
+            
+            // Username validation
+            if (username.length < 3) {
+                showValidationError('username', 'Username must be at least 3 characters long');
+                isValid = false;
+            } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showValidationError('username', 'Username can only contain letters, numbers, and underscores');
+                isValid = false;
+            } else {
+                showValidationSuccess('username');
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showValidationError('email', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                showValidationSuccess('email');
+            }
+            
+            // Password validation
+            if (password.length < 8) {
+                showValidationError('password', 'Password must be at least 8 characters long');
+                isValid = false;
+            } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                showValidationError('password', 'Password must contain uppercase, lowercase, and number');
+                isValid = false;
+            } else {
+                showValidationSuccess('password');
+            }
+            
+            // Confirm password validation
+            if (password !== confirmPassword) {
+                showValidationError('confirmPassword', 'Passwords do not match');
+                isValid = false;
+            } else if (confirmPassword.length > 0) {
+                showValidationSuccess('confirmPassword');
+            }
+            
+            // Terms validation
+            if (!terms) {
+                showValidationError('terms', 'You must agree to the terms and conditions');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Show loading state
+                const submitBtn = registerForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin me-2"></i>Creating Account...';
+                submitBtn.disabled = true;
+                
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('confirmPassword', confirmPassword);
+                formData.append('terms', terms);
+                
+                // Submit to backend
+                fetch('php/register.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        showSuccessMessage(data.message);
+                        
+                        // Redirect to login page after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        // Handle validation errors from backend
+                        if (data.data && typeof data.data === 'object') {
+                            Object.keys(data.data).forEach(field => {
+                                showValidationError(field, data.data[field]);
+                            });
+                        } else {
+                            showErrorMessage(data.message);
+                        }
+                        
+                        // Reset button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Registration error:', error);
+                    showErrorMessage('An error occurred. Please try again.');
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+            }
+        });
+        
+        // Real-time validation
+        document.getElementById('username').addEventListener('input', function() {
+            const username = this.value.trim();
+            if (username.length >= 3 && /^[a-zA-Z0-9_]+$/.test(username)) {
+                showValidationSuccess('username');
+            } else if (username.length > 0) {
+                if (username.length < 3) {
+                    showValidationError('username', 'Username must be at least 3 characters long');
+                } else {
+                    showValidationError('username', 'Username can only contain letters, numbers, and underscores');
+                }
+            } else {
+                clearFieldValidation('username');
+            }
+        });
+        
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(email)) {
+                showValidationSuccess('email');
+            } else if (email.length > 0) {
+                showValidationError('email', 'Please enter a valid email address');
+            } else {
+                clearFieldValidation('email');
+            }
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            if (password.length >= 8 && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                showValidationSuccess('password');
+            } else if (password.length > 0) {
+                if (password.length < 8) {
+                    showValidationError('password', 'Password must be at least 8 characters long');
+                } else {
+                    showValidationError('password', 'Password must contain uppercase, lowercase, and number');
+                }
+            } else {
+                clearFieldValidation('password');
+            }
+            
+            // Check password match when password changes
+            checkPasswordMatch();
+        });
+        
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            checkPasswordMatch();
+        });
+    }
+});
+
+// Password toggle functionality
+function initPasswordToggle() {
+    const passwordToggle = document.getElementById('togglePassword');
+    const confirmPasswordToggle = document.getElementById('toggleConfirmPassword');
+    
+    if (passwordToggle) {
+        passwordToggle.addEventListener('click', function() {
+            togglePasswordVisibility('password', 'togglePasswordIcon');
+        });
+    }
+    
+    if (confirmPasswordToggle) {
+        confirmPasswordToggle.addEventListener('click', function() {
+            togglePasswordVisibility('confirmPassword', 'toggleConfirmPasswordIcon');
+        });
+    }
+}
+
+function togglePasswordVisibility(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(iconId);
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('bi-eye');
+        toggleIcon.classList.add('bi-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('bi-eye-slash');
+        toggleIcon.classList.add('bi-eye');
+    }
+}
+
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (confirmPassword.length === 0) {
+        clearFieldValidation('confirmPassword');
+        return;
+    }
+    
+    if (password === confirmPassword) {
+        showValidationSuccess('confirmPassword');
+    } else {
+        showValidationError('confirmPassword', 'Passwords do not match');
+    }
+}
+
+// Validation helper functions
+function showValidationError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const feedback = field.parentNode.querySelector('.invalid-feedback') || createFeedbackElement(field.parentNode, 'invalid-feedback');
+    
+    field.classList.remove('is-valid');
+    field.classList.add('is-invalid');
+    feedback.textContent = message;
+    feedback.style.display = 'block';
+}
+
+function showValidationSuccess(fieldId) {
+    const field = document.getElementById(fieldId);
+    const invalidFeedback = field.parentNode.querySelector('.invalid-feedback');
+    
+    field.classList.remove('is-invalid');
+    field.classList.add('is-valid');
+    
+    if (invalidFeedback) {
+        invalidFeedback.style.display = 'none';
+    }
+}
+
+function clearFieldValidation(fieldId) {
+    const field = document.getElementById(fieldId);
+    const feedback = field.parentNode.querySelector('.invalid-feedback');
+    
+    field.classList.remove('is-valid', 'is-invalid');
+    
+    if (feedback) {
+        feedback.style.display = 'none';
+    }
+}
+
+function clearValidationStates() {
+    ['username', 'email', 'password', 'confirmPassword'].forEach(fieldId => {
+        clearFieldValidation(fieldId);
+    });
+}
+
+function createFeedbackElement(parent, className) {
+    const feedback = document.createElement('div');
+    feedback.className = className;
+    feedback.style.display = 'none';
+    parent.appendChild(feedback);
+    return feedback;
+}
+
+// Success and error message functions
+function showSuccessMessage(message) {
+    removeExistingMessages();
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="bi bi-check-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('register-form');
+    form.parentNode.insertBefore(alertDiv, form);
+}
+
+function showErrorMessage(message) {
+    removeExistingMessages();
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('register-form');
+    form.parentNode.insertBefore(alertDiv, form);
+}
+
+function removeExistingMessages() {
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+}
+
+// CSS animation for spinning icon
+const spinCSS = `
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .spin {
+        animation: spin 1s linear infinite;
+    }
+`;
+
+// Add CSS to head
+const style = document.createElement('style');
+style.textContent = spinCSS;
+document.head.appendChild(style);
+
+// Login form functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login-form');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            
+            // Clear previous messages
+            clearMessages();
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+            
+            // Send login request
+            fetch('php/login.php', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessMessage(data.message);
+                    
+                    // Update global state
+                    currentUser = data.data;
+                    isLoggedIn = true;
+                    
+                    // Update navigation
+                    updateNavigationForLoggedInUser();
+                    
+                    // Redirect to profile or intended page
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 1000);
+                } else {
+                    showErrorMessage(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+                showErrorMessage('An error occurred during login. Please try again.');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Sign In';
+            });
+        });
+    }
+});
+
+// Helper functions for login form
+function showSuccessMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('login-form');
+    form.parentNode.insertBefore(alertDiv, form);
+}
+
+function showErrorMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('login-form');
+    form.parentNode.insertBefore(alertDiv, form);
+}
+
+function clearMessages() {
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+}
