@@ -423,12 +423,12 @@
 
     <script>
       // Limit phone input to 11 digits
-      document.addEventListener("DOMContentLoaded", function () {
-        var phoneInput = document.getElementById("edit-phone");
+      document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.getElementById('edit-phone');
         if (phoneInput) {
-          phoneInput.addEventListener("input", function (e) {
+          phoneInput.addEventListener('input', function (e) {
             // Remove non-digit characters
-            let value = e.target.value.replace(/\D/g, "");
+            let value = e.target.value.replace(/\D/g, '');
             // Limit to 11 digits
             if (value.length > 11) value = value.slice(0, 11);
             e.target.value = value;
